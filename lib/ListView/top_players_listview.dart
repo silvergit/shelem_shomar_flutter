@@ -7,8 +7,9 @@ import 'package:shelem_shomar/pages/top_players.dart';
 
 class TopPlayersListView extends StatefulWidget {
   final CollectAllDatas data;
+  final int listGridTypeIndex;
 
-  TopPlayersListView(this.data);
+  TopPlayersListView(this.data, this.listGridTypeIndex);
 
   @override
   State<StatefulWidget> createState() {
@@ -78,71 +79,159 @@ class _TopPlayersListViewState extends State<TopPlayersListView> {
     return colors[p.round()];
   }
 
-  Widget _buildListBody(int index) {
-    return Column(
-      children: <Widget>[
-        ListTile(
-          contentPadding: EdgeInsets.all(0.0),
-          leading: CustomCircleAvatar(
-            widget.data.players[index].avatar,
-            radius: 25.0,
-            iconSize: 30.0,
-            circleColor: Theme.of(context).accentColor,
-          ),
-          title: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Text(
-              widget.data.players[index].name,
-              textAlign: TextAlign.left,
-              style: TextStyle(
-                fontSize: 20.0,
+  Widget _buildBody() {
+    switch (widget.listGridTypeIndex) {
+      case 0:
+        return _buildListType();
+        break;
+      case 1:
+        return _buildGridType();
+        break;
+    }
+  }
+
+  Widget _buildListType() {
+    return ListView.builder(
+      padding: EdgeInsets.only(left: 10.0, right: 10.0),
+      shrinkWrap: true,
+      itemBuilder: (BuildContext context, int index) {
+        return Column(
+          children: <Widget>[
+            ListTile(
+              contentPadding: EdgeInsets.all(0.0),
+              leading: CustomCircleAvatar(
+                widget.data.players[index].avatar,
+                radius: 25.0,
+                iconSize: 30.0,
+                circleColor: Theme
+                    .of(context)
+                    .accentColor,
+              ),
+              title: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Text(
+                  widget.data.players[index].name,
+                  textAlign: TextAlign.left,
+                  style: TextStyle(
+                    fontSize: 20.0,
+                  ),
+                ),
+              ),
+              subtitle: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    ScoreLabel(
+                      '${mItems[index].getWins()} ${S
+                          .of(context)
+                          .wins}',
+                      fontSize: Theme
+                          .of(context)
+                          .textTheme
+                          .body1
+                          .fontSize,
+                      height: 24.0,
+                      transparent: 0.5,
+                      fontColor: Colors.amber,
+                      margin: 0.0,
+                    ),
+                    ScoreLabel(
+                      '${mItems[index].getLosses()} ${S
+                          .of(context)
+                          .looses}',
+                      fontSize: Theme
+                          .of(context)
+                          .textTheme
+                          .body1
+                          .fontSize,
+                      height: 24.0,
+                      transparent: 0.5,
+                      fontColor: Colors.amber,
+                      margin: 2.0,
+                    ),
+                  ],
+                ),
+              ),
+              trailing: ScoreLabel(
+                mItems[index].getScore().toString(),
+                margin: 0.0,
+                backColor: _getColor(index),
               ),
             ),
-          ),
-          subtitle: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                ScoreLabel(
-                  '${mItems[index].getWins()} ${S.of(context).wins}',
-                  fontSize: Theme.of(context).textTheme.body1.fontSize,
-                  height: 24.0,
-                  transparent: 0.5,
-                  fontColor: Colors.amber,
-                  margin: 0.0,
+            Divider()
+          ],
+        );
+      },
+      itemCount: mItems.length,
+    );
+  }
+
+  Widget _buildGridType() {
+    return GridView.builder(
+      gridDelegate:
+      SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+      padding: EdgeInsets.only(left: 10.0, right: 10.0),
+//      shrinkWrap: true,
+      itemBuilder: (BuildContext context, int index) {
+        return Card(
+          child: Column(
+            children: <Widget>[
+              ScoreLabel(
+                mItems[index].getScore().toString(),
+                margin: 0.0,
+                backColor: _getColor(index),
+                height: 48.0,
+              ),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Text(
+                  widget.data.players[index].name,
+                  textAlign: TextAlign.left,
+                  style: TextStyle(
+                    fontSize: 20.0,
+                  ),
                 ),
-                ScoreLabel(
-                  '${mItems[index].getLosses()} ${S.of(context).looses}',
-                  fontSize: Theme.of(context).textTheme.body1.fontSize,
-                  height: 24.0,
-                  transparent: 0.5,
-                  fontColor: Colors.amber,
-                  margin: 2.0,
-                ),
-              ],
-            ),
+              ),
+              Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  CustomCircleAvatar(widget.data.players[index].avatar,
+                    radius: 25.0,
+                    iconSize: 30.0,
+                    circleColor: Theme
+                        .of(context)
+                        .accentColor,),
+                  SingleChildScrollView(
+                    scrollDirection: Axis.vertical,
+                    child: ScoreLabel(
+                      '${mItems[index].getWins()} ${S
+                          .of(context)
+                          .wins}\n${mItems[index].getLosses()} ${S
+                          .of(context)
+                          .looses}',
+                      fontSize: Theme
+                          .of(context)
+                          .textTheme
+                          .body1
+                          .fontSize,
+                      height: 48.0,
+                      transparent: 0.5,
+                      fontColor: Colors.amber,
+                      margin: 0.0,
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ),
-          trailing: ScoreLabel(
-            mItems[index].getScore().toString(),
-            margin: 0.0,
-            backColor: _getColor(index),
-          ),
-        ),
-        Divider()
-      ],
+        );
+      },
+      itemCount: mItems.length,
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      padding: EdgeInsets.only(left: 10.0, right: 10.0),
-      shrinkWrap: true,
-      itemBuilder: (BuildContext context, int index) {
-        return _buildListBody(index);
-      },
-      itemCount: mItems.length,
-    );
+    return _buildBody();
   }
 }

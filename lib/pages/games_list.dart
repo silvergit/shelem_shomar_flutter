@@ -14,6 +14,7 @@ class GamesList extends StatefulWidget {
 class _GameListState extends State<GamesList> {
   var db = DBHelper();
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

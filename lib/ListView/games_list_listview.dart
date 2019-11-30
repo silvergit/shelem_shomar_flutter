@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shelem_shomar/Widgets/custom_circle_avatar.dart';
 import 'package:shelem_shomar/Widgets/score_label.dart';
+import 'package:shelem_shomar/Widgets/text-with-locale-support.dart';
 import 'package:shelem_shomar/generated/i18n.dart';
 import 'package:shelem_shomar/helpers/dbhelper.dart';
 import 'package:shelem_shomar/models/game_table.dart';
@@ -93,6 +94,10 @@ class _GamesListView extends State<GamesListListView> {
       );
     }
 
+    String languageCode = Localizations
+        .localeOf(context)
+        .languageCode;
+
     return new ListView.builder(
       padding: EdgeInsets.only(left: 10.0, right: 10.0),
       shrinkWrap: true,
@@ -140,8 +145,10 @@ class _GamesListView extends State<GamesListListView> {
                           Expanded(
                             child: Column(
                               children: <Widget>[
-                                Text(widget.games[index].date),
-                                Text(widget.games[index].time),
+                                TextWithLocale(
+                                    widget.games[index].date, languageCode),
+                                TextWithLocale(
+                                    widget.games[index].time, languageCode),
                                 ScoreLabel(
                                   widget.games[index].team1Points.toString() +
                                       ' : ' +

@@ -1,4 +1,5 @@
 {
+  "UseCommand": "flutter pub run gen_lang:generate",
   "shelemShomar": "Shelem Shomar",
   "newGame": "New Game",
   "managePlayers": "Manage Players",
@@ -92,12 +93,12 @@
   "edit": "Edit",
   "backupRestore": "Backup/Restore",
   "backupAllDataToMemory": "Backup all data to phone memory",
-  "youCanExportBackupsToAnotherPhoneAndUseIt": "You can export backups to another phone and use it",
+  "youCanExportBackupsToAnotherPhoneAndUseIt": "You can export backups to another phone and use it in this phone.",
   "backupNow": "Backup now",
   "lastBackup": "Last backup",
   "youCanSeeBackupFilesHere": "You can see backup files here",
   "pleaseSelectBackupToRestoreIt": "Please select backup to restore it",
-  "afterRestoringAllPreviousDataFromTheProgramWillBeReplaced": "After restoring, all previous data from the program will be replaced. Make sure to have a backup first",
+  "afterRestoringAllPreviousDataFromTheProgramWillBeReplaced": "After restoring, all previous data from the program will be replaced. Make sure to have a backup first.",
   "resetDataBase": "Reset Database",
   "resetDataBaseMessageInfo": "Deleting the database will delete all your data. First, make sure you back up your application data.",
   "orSelectFromPhoneMemory": "Or select from phone memory",
@@ -119,5 +120,15 @@
   "doYouWantToDeleteBackupFile": "Do you want to delete backup file",
   "theSelectedFileTypeIsWrong": "The selected file type is wrong. Select a ShelemShomar Database file",
   "size": "Size",
-  "created": "Created"
+  "created": "Created",
+  "slm": "Slm",
+  "kns": "Kns",
+  "deleteFormDefaultValues": "Delete form default values",
+  "getPointsAfter1100": "Get points after 1100",
+  "write": "Write",
+  "doNotWrite": "Don`t write",
+  "doYouWantToExit": "Do you want to exit?",
+  "areYouSure": "Are you sure?",
+  "yes": "Yes",
+  "no": "No"
 }

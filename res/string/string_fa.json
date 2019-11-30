@@ -1,4 +1,5 @@
 {
+  "UseCommand": "flutter pub run gen_lang:generate",
   "shelemShomar": "شلم شمار",
   "newGame": "بازی جدید",
   "managePlayers": "مدیریت بازیکنان",
@@ -92,12 +93,12 @@
   "edit": "ویرایش",
   "backupRestore": "پشتیبانی اطلاعات",
   "backupAllDataToMemory": "ذخیره فایل پشتیبان بر روی حافظه دستگاه",
-  "youCanExportBackupsToAnotherPhoneAndUseIt": "شما میتوانید فایل پشتیبان را در دیگر دستگاه ها هم استفاده کنید",
+  "youCanExportBackupsToAnotherPhoneAndUseIt": "شما میتوانید فایل پشتیبان را در دیگر دستگاه ها هم استفاده کنید.",
   "backupNow": "پشتیبان گیری",
   "lastBackup": "آخرین تاریخ پشتیبان گیری",
   "youCanSeeBackupFilesHere": "فایل های پشتیبان",
   "pleaseSelectBackupToRestoreIt": "یک نسخه پشتیبان را برای بازگردانی انتخاب کنید",
-  "afterRestoringAllPreviousDataFromTheProgramWillBeReplaced": "بعد از بازگردانی تمامی اطلاعات فعلی برنامه جایگزین خواهند شد. از داشتن نسخه پشتیبان مطمئن شوید",
+  "afterRestoringAllPreviousDataFromTheProgramWillBeReplaced": "بعد از بازگردانی تمامی اطلاعات فعلی برنامه جایگزین خواهند شد. از داشتن نسخه پشتیبان مطمئن شوید.",
   "resetDataBase": "حذف تمام داده‌ها",
   "resetDataBaseMessageInfo": "با حذف دیتابیس تمام اطلاعات شما  حذف خواهند شد. اول مطمئن شوید که از اطلاعات برنامه پشتیبان تهیه کرده اید.",
   "orSelectFromPhoneMemory": "یا از حافظه دستگاه انتخاب کنید",
@@ -119,5 +120,15 @@
   "doYouWantToDeleteBackupFile": "فایل پشتیبان را حذف میکنید",
   "theSelectedFileTypeIsWrong": "فایل انتخاب شده درست نیست. یک فایل داده شلم شمار را انتخاب کنید",
   "size": "سایز",
-  "created": "تاریخ"
+  "created": "تاریخ",
+  "slm": "شلم",
+  "kns": "کنس",
+  "deleteFormDefaultValues": "حذف اطلاعات فرم",
+  "getPointsAfter1100": "نوشتن گرفته بعد از ۱۱۰۰",
+  "write": "نوشتن",
+  "doNotWrite": "ننوشتن",
+  "doYouWantToExit": "از بازی خارج میشوید؟",
+  "areYouSure": "خروج",
+  "yes": "بله",
+  "no": "نه"
 }

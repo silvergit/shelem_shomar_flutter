@@ -2,10 +2,12 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:jalali_date/jalali_date.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shelem_shomar/ListView/chart_listview.dart';
 import 'package:shelem_shomar/Widgets/bottom-bar-ingame.dart';
 import 'package:shelem_shomar/Widgets/custom_circle_avatar.dart';
 import 'package:shelem_shomar/Widgets/side_drawer.dart';
+import 'package:shelem_shomar/Widgets/text-with-locale-support.dart';
 import 'package:shelem_shomar/dialogs/close_hand_dialog.dart';
 import 'package:shelem_shomar/dialogs/open_hand_dialog.dart';
 import 'package:shelem_shomar/generated/i18n.dart';
@@ -31,14 +33,9 @@ class InGamePage extends StatefulWidget {
 
 class _InGamePage extends State<InGamePage> {
   //INIT
-//  List<String> avatars;
   List<Item> listItems = [];
-
-//  List<String> playerNames;
-
   bool _changeButtonOpenCloseText = true;
   bool btnGameState = true;
-
   int _starter = 0;
   bool _isShelem = false;
   bool _isKons = false;
@@ -46,32 +43,24 @@ class _InGamePage extends State<InGamePage> {
   int _getPoints;
   int _dPosCount = 0;
   int _dNegCount = 0;
-
   String _date = PersianDate.now().toString();
   String _time = '0:0:0';
-
   String _team1PointsResult = '0';
   String _team2PointsResult = '0';
-
   int _winner;
-
-  PlayerTable t1p1 = PlayerTable();
-  PlayerTable t1p2 = PlayerTable();
-  PlayerTable t2p1 = PlayerTable();
-  PlayerTable t2p2 = PlayerTable();
-
-  SizedBox _verticalGap = SizedBox(
-    width: 10.0,
-  );
-
-  List<PlayerReadRecords> playerReadRecords = [];
-  PlayerReadRecords prr1;
-  PlayerReadRecords prr2;
-  PlayerReadRecords prr3;
-  PlayerReadRecords prr4;
-
+  PlayerTable _t1p1 = PlayerTable();
+  PlayerTable _t1p2 = PlayerTable();
+  PlayerTable _t2p1 = PlayerTable();
+  PlayerTable _t2p2 = PlayerTable();
+  List<PlayerReadRecords> _playerReadRecords = [];
+  PlayerReadRecords _prr1;
+  PlayerReadRecords _prr2;
+  PlayerReadRecords _prr3;
+  PlayerReadRecords _prr4;
   DateTime _startTime;
   Timer _timer;
+  int _listTypeIndex;
+  bool _getAfter = false;
 
   @override
   void initState() {
@@ -83,18 +72,22 @@ class _InGamePage extends State<InGamePage> {
           widget.gameData['t1InitPoints'], widget.gameData['t2InitPoints']);
     }
 
-    t1p1 = widget.gameData['t1p1'];
-    t1p2 = widget.gameData['t1p2'];
-    t2p1 = widget.gameData['t2p1'];
-    t2p2 = widget.gameData['t2p2'];
+    _t1p1 = widget.gameData['t1p1'];
+    _t1p2 = widget.gameData['t1p2'];
+    _t2p1 = widget.gameData['t2p1'];
+    _t2p2 = widget.gameData['t2p2'];
 
-    prr1 = PlayerReadRecords(t1p1.name, t1p1.avatar);
-    prr2 = PlayerReadRecords(t1p2.name, t1p2.avatar);
-    prr3 = PlayerReadRecords(t2p1.name, t2p1.avatar);
-    prr4 = PlayerReadRecords(t2p2.name, t2p2.avatar);
+    _prr1 = PlayerReadRecords(_t1p1.name, _t1p1.avatar);
+    _prr2 = PlayerReadRecords(_t1p2.name, _t1p2.avatar);
+    _prr3 = PlayerReadRecords(_t2p1.name, _t2p1.avatar);
+    _prr4 = PlayerReadRecords(_t2p2.name, _t2p2.avatar);
 
     _startTime = DateTime.now();
-    _timer = Timer.periodic(Duration(seconds: 1), (Timer t) => updateTimer());
+    _timer = Timer.periodic(Duration(seconds: 1), (Timer t) => _updateTimer());
+
+    _getAfter = widget.gameData['getPointsAfter'];
+
+    _loadSharedPreferences();
   }
 
   @override
@@ -104,7 +97,20 @@ class _InGamePage extends State<InGamePage> {
   }
 
   //NORMAL FUNCTIONS
-  updateTimer() {
+  void _updateListTypeIndex() {
+    int maxIndex = 2;
+    if (_listTypeIndex + 1 > maxIndex)
+      setState(() {
+        _listTypeIndex = 0;
+      });
+    else
+      setState(() {
+        _listTypeIndex++;
+      });
+    _saveSharedPreferences();
+  }
+
+  void _updateTimer() {
     DateTime endTime = DateTime.now();
     Duration duration = endTime.difference(_startTime);
     String sDuration =
@@ -134,13 +140,13 @@ class _InGamePage extends State<InGamePage> {
     return gPoint;
   }
 
-  changeButtonText() {
+  void _changeButtonText() {
     setState(() {
       _changeButtonOpenCloseText = !_changeButtonOpenCloseText;
     });
   }
 
-  void updateTextViewResults() {
+  void _updateTextViewResults() {
     int t1Sum = _getSumListRows(1);
     int t2Sum = _getSumListRows(2);
 
@@ -174,25 +180,25 @@ class _InGamePage extends State<InGamePage> {
     _winner = -1; //1 for first team and 2 for second team
     bool isWin = false;
 
-    if (t1SumListRows > _getGoalPoint()) {
+    if (t1SumListRows >= _getGoalPoint()) {
       _winner = 1;
       btnGameState = false;
       _createWinnerDialog(context, _winner, "nrm");
       isWin = true;
-    } else if (t2SumListRows > _getGoalPoint()) {
+    } else if (t2SumListRows >= _getGoalPoint()) {
       _winner = 2;
       btnGameState = false;
       _createWinnerDialog(context, _winner, "nrm");
       isWin = true;
     } else if (t1SumListRows > t2SumListRows) {
-      if (t1SumListRows - t2SumListRows > _getGoalPoint()) {
+      if (t1SumListRows - t2SumListRows >= _getGoalPoint()) {
         _winner = 1;
         btnGameState = false;
         _createWinnerDialog(context, _winner, "dif");
         isWin = true;
       }
     } else if (t1SumListRows < t2SumListRows) {
-      if (t2SumListRows - t1SumListRows > _getGoalPoint()) {
+      if (t2SumListRows - t1SumListRows >= _getGoalPoint()) {
         _winner = 2;
         btnGameState = false;
         _createWinnerDialog(context, _winner, "dif");
@@ -229,10 +235,10 @@ class _InGamePage extends State<InGamePage> {
                   child: OutlineButton(
                     child: Text(S.of(context).quitAndSaveGame),
                     onPressed: () {
-                      playerReadRecords.add(prr1);
-                      playerReadRecords.add(prr2);
-                      playerReadRecords.add(prr3);
-                      playerReadRecords.add(prr4);
+                      _playerReadRecords.add(_prr1);
+                      _playerReadRecords.add(_prr2);
+                      _playerReadRecords.add(_prr3);
+                      _playerReadRecords.add(_prr4);
 
                       _addGameDataToDb();
                       Navigator.pop(context);
@@ -241,7 +247,7 @@ class _InGamePage extends State<InGamePage> {
                           context,
                           MaterialPageRoute(
                               builder: (BuildContext context) => WinnerDetails(
-                                  playerReadRecords,
+                                  _playerReadRecords,
                                   _winner,
                                   listItems.length,
                                   _dPosCount,
@@ -260,13 +266,64 @@ class _InGamePage extends State<InGamePage> {
     );
   }
 
-  void setBtnStartState(bool state) {
-    setState(() {
-      btnGameState = state;
-    });
+  void _setBtnStartState(bool state) {
+    setState(
+          () {
+        btnGameState = state;
+      },
+    );
   }
 
   //ASYNC FUNCTIONS
+
+  Future<bool> _onWillPop() {
+    return showDialog(
+      context: context,
+      builder: (context) =>
+      new AlertDialog(
+        title: new Text(S
+            .of(context)
+            .areYouSure),
+        content: new Text(S
+            .of(context)
+            .doYouWantToExit),
+        actions: <Widget>[
+          new FlatButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: new Text(S
+                .of(context)
+                .no),
+          ),
+          new FlatButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: new Text(S
+                .of(context)
+                .yes),
+          ),
+        ],
+      ),
+    ) ??
+        false;
+  }
+
+  void _saveSharedPreferences() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('listType', _listTypeIndex);
+  }
+
+  void _loadSharedPreferences() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (prefs.getInt('listType') != null) {
+      setState(() {
+        _listTypeIndex = prefs.getInt('listType');
+      });
+    } else {
+      setState(() {
+        _listTypeIndex = 0;
+      });
+    }
+  }
+
   _addGameDataToDb() async {
     int p1Id = widget.gameData['t1p1'].id;
     int p2Id = widget.gameData['t1p2'].id;
@@ -342,8 +399,7 @@ class _InGamePage extends State<InGamePage> {
   }
 
   //WIDGETS
-
-  Widget _buildHeader() {
+  Widget _buildHeader(String languageCode) {
     return Container(
       padding: EdgeInsets.all(10.0),
       color: Theme.of(context).accentColor,
@@ -356,124 +412,83 @@ class _InGamePage extends State<InGamePage> {
                 '${S.of(context).finalPoints}: ',
                 style: TextStyle(fontSize: 20.0),
               ),
-              Text(
+              TextWithLocale(
                 _getGoalPoint().toString(),
-                style: TextStyle(fontSize: 20.0),
+                languageCode,
+                fontSize: 16.0,
               )
             ],
           ),
         ),
-        Text(
+        TextWithLocale(
           _time,
-          style: TextStyle(fontSize: 16.0),
+          languageCode,
+          fontSize: 16.0,
         ),
         SizedBox(
           width: 16.0,
         ),
-        Text(
+        TextWithLocale(
           _date,
-          style: TextStyle(fontSize: 16.0),
+          languageCode,
+          fontSize: 16.0,
         ),
       ]),
     );
   }
 
-//  Widget _buildBottomResultsBar() {
-//    return Card(
-//      color: Theme.of(context).cardColor,
-//      margin: EdgeInsets.only(left: 10.0, right: 10.0, top: 10.0, bottom: 4.0),
-//      child: Container(
-//        padding: EdgeInsets.all(10.0),
-//        child: Row(
-//          children: <Widget>[
-//            CustomCircleAvatar(
-////              avatars[0],
-//              t1p1.avatar,
-//              radius: 20.0,
-//              iconSize: 25.0,
-//            ),
-//            _verticalGap,
-//            CustomCircleAvatar(
-////              avatars[1],
-//              t1p2.avatar,
-//              radius: 20.0,
-//              iconSize: 25.0,
-//            ),
-//            _verticalGap,
-//            Expanded(
-//              child: Text(
-//                _team1PointsResult,
-//                textAlign: TextAlign.start,
-//                style: TextStyle(fontSize: 20.0),
-//              ),
-//            ),
-//            Expanded(
-//              child: Text(
-//                _team2PointsResult,
-//                textAlign: TextAlign.end,
-//                style: TextStyle(fontSize: 20.0),
-//              ),
-//            ),
-//            _verticalGap,
-//            CustomCircleAvatar(
-////              avatars[2],
-//              t2p1.avatar,
-//              radius: 20.0,
-//              iconSize: 25.0,
-//            ),
-//            _verticalGap,
-//            CustomCircleAvatar(
-////              avatars[3],
-//              t2p2.avatar,
-//              radius: 20.0,
-//              iconSize: 25.0,
-//            ),
-//          ],
-//        ),
-//      ),
-//    );
-//  }
-
-  Widget _buildBottomResultsBar() {
+  Widget _buildBottomResultsBar(String languageCode) {
     return Container(
       padding: EdgeInsets.all(10.0),
       child: Row(
         children: <Widget>[
           CustomCircleAvatar(
-            t1p1.avatar,
+            _t1p1.avatar,
             radius: 20.0,
             iconSize: 25.0,
           ),
-          _verticalGap,
+          SizedBox(
+            width: 10.0,
+          ),
           CustomCircleAvatar(
-            t1p2.avatar,
+            _t1p2.avatar,
             radius: 20.0,
             iconSize: 25.0,
           ),
-          _verticalGap,
+          SizedBox(
+            width: 10.0,
+          ),
           Expanded(
-            child: Text(
+            child: TextWithLocale(
               _team1PointsResult,
-              textAlign: TextAlign.start,
-              style: TextStyle(fontSize: 20.0),
+              languageCode,
+              textAlignEn: TextAlign.start,
+              textAlignFa: TextAlign.end,
+              fontSize: 20.0,
             ),
           ),
           Expanded(
-            child: Text(
+            child: TextWithLocale(
               _team2PointsResult,
-              textAlign: TextAlign.end,
-              style: TextStyle(fontSize: 20.0),
+              languageCode,
+              textAlignEn: TextAlign.end,
+              textAlignFa: TextAlign.start,
+              fontSize: 20.0,
             ),
           ),
-          _verticalGap,
+          SizedBox(
+            width: 10.0,
+          ),
           CustomCircleAvatar(
-            t2p1.avatar,
+            _t2p1.avatar,
             radius: 20.0,
             iconSize: 25.0,
           ),
-          _verticalGap,
+          SizedBox(
+            width: 10.0,
+          ),
           CustomCircleAvatar(
-            t2p2.avatar,
+            _t2p2.avatar,
             radius: 20.0,
             iconSize: 25.0,
           ),
@@ -492,7 +507,7 @@ class _InGamePage extends State<InGamePage> {
 
     listItems.add(item);
 
-    updateTextViewResults();
+    _updateTextViewResults();
   }
 
   void _showOpenHandDialog() {
@@ -516,12 +531,8 @@ class _InGamePage extends State<InGamePage> {
           _isShelem = onValue['shelem'];
           _isKons = onValue['kons'];
 
-          setState(
-            () {
-              changeButtonText();
-              _buildOpenHandListItem();
-            },
-          );
+          _changeButtonText();
+          _buildOpenHandListItem();
         }
       },
     );
@@ -536,12 +547,9 @@ class _InGamePage extends State<InGamePage> {
       (onValue) {
         if (onValue != null) {
           _getPoints = int.parse(onValue);
-          setState(
-            () {
-              changeButtonText();
-              _buildCloseHandListItem();
-            },
-          );
+
+          _changeButtonText();
+          _buildCloseHandListItem();
         }
       },
     );
@@ -550,9 +558,13 @@ class _InGamePage extends State<InGamePage> {
   _buildOpenHandListItem() {
     String readPoints;
     if (_isShelem) {
-      readPoints = 'Slm';
+      readPoints = S
+          .of(context)
+          .slm;
     } else if (_isKons) {
-      readPoints = 'Kns';
+      readPoints = S
+          .of(context)
+          .kns;
     } else {
       readPoints = _readPoints;
     }
@@ -564,7 +576,9 @@ class _InGamePage extends State<InGamePage> {
     item.starter = _starter;
     item.whichColor = Constants.READ_CASE;
 
-    listItems.add(item);
+    setState(() {
+      listItems.add(item);
+    });
   }
 
   _buildCloseHandListItem() {
@@ -632,26 +646,22 @@ class _InGamePage extends State<InGamePage> {
         }
         // winner group = 145, looser group = 20
       } else if (getPoints > 0) {
-        if (_starter == 1 || _starter == 2) {
-          if (_getSumListRows(2) > 1100) {
+        if (_getAfter) {
+          if (_starter == 1 || _starter == 2) {
             firstScore = gameType - getPoints;
-            secondScore = 0;
-            SnackBar(
-                content: Text(S.of(context).getPointsNotCalculateAfter1100));
+            secondScore = getPoints;
             winLoos = Constants.WIN_CASE;
-          } else {
+          } else if (_starter == 3 || _starter == 4) {
             firstScore = gameType - getPoints;
             secondScore = getPoints;
             winLoos = Constants.WIN_CASE;
           }
-        } else if (_starter == 3 || _starter == 4) {
-          if (_getSumListRows(1) > 1100) {
+        } else {
+          if (_starter == 1 || _starter == 2) {
             firstScore = gameType - getPoints;
-            secondScore = 0;
-            SnackBar(
-                content: Text(S.of(context).getPointsNotCalculateAfter1100));
+            secondScore = getPoints;
             winLoos = Constants.WIN_CASE;
-          } else {
+          } else if (_starter == 3 || _starter == 4) {
             firstScore = gameType - getPoints;
             secondScore = getPoints;
             winLoos = Constants.WIN_CASE;
@@ -688,9 +698,13 @@ class _InGamePage extends State<InGamePage> {
 
     String rP;
     if (_isShelem) {
-      rP = 'Slm';
+      rP = S
+          .of(context)
+          .slm;
     } else if (_isKons) {
-      rP = 'Kns';
+      rP = S
+          .of(context)
+          .kns;
     } else {
       rP = _readPoints;
     }
@@ -699,50 +713,50 @@ class _InGamePage extends State<InGamePage> {
       case 1:
         team1Points = firstScore;
         team2Points = secondScore;
-        prr1.readCount++;
+        _prr1.readCount++;
         if (_isKons)
-          prr1.topRead = 999;
+          _prr1.topRead = 999;
         else if (_isShelem)
-          prr1.topRead = 998;
-        else if (prr1.topRead < readPoints) prr1.topRead = readPoints;
-        if (winLoos == Constants.WIN_CASE) prr1.wins++;
-        if (winLoos == Constants.LOSE_CASE) prr1.looses++;
+          _prr1.topRead = 998;
+        else if (_prr1.topRead < readPoints) _prr1.topRead = readPoints;
+        if (winLoos == Constants.WIN_CASE) _prr1.wins++;
+        if (winLoos == Constants.LOSE_CASE) _prr1.looses++;
         break;
       case 2:
         team1Points = firstScore;
         team2Points = secondScore;
-        prr2.readCount++;
+        _prr2.readCount++;
         if (_isKons)
-          prr2.topRead = 999;
+          _prr2.topRead = 999;
         else if (_isShelem)
-          prr2.topRead = 998;
-        else if (prr2.topRead < readPoints) prr2.topRead = readPoints;
-        if (winLoos == Constants.WIN_CASE) prr2.wins++;
-        if (winLoos == Constants.LOSE_CASE) prr2.looses++;
+          _prr2.topRead = 998;
+        else if (_prr2.topRead < readPoints) _prr2.topRead = readPoints;
+        if (winLoos == Constants.WIN_CASE) _prr2.wins++;
+        if (winLoos == Constants.LOSE_CASE) _prr2.looses++;
         break;
       case 3:
         team2Points = firstScore;
         team1Points = secondScore;
-        prr3.readCount++;
+        _prr3.readCount++;
         if (_isKons)
-          prr3.topRead = 999;
+          _prr3.topRead = 999;
         else if (_isShelem)
-          prr3.topRead = 998;
-        else if (prr3.topRead < readPoints) prr3.topRead = readPoints;
-        if (winLoos == Constants.WIN_CASE) prr3.wins++;
-        if (winLoos == Constants.LOSE_CASE) prr3.looses++;
+          _prr3.topRead = 998;
+        else if (_prr3.topRead < readPoints) _prr3.topRead = readPoints;
+        if (winLoos == Constants.WIN_CASE) _prr3.wins++;
+        if (winLoos == Constants.LOSE_CASE) _prr3.looses++;
         break;
       case 4:
         team2Points = firstScore;
         team1Points = secondScore;
-        prr4.readCount++;
+        _prr4.readCount++;
         if (_isKons)
-          prr4.topRead = 999;
+          _prr4.topRead = 999;
         else if (_isShelem)
-          prr4.topRead = 998;
-        else if (prr4.topRead < readPoints) prr4.topRead = readPoints;
-        if (winLoos == Constants.WIN_CASE) prr4.wins++;
-        if (winLoos == Constants.LOSE_CASE) prr4.looses++;
+          _prr4.topRead = 998;
+        else if (_prr4.topRead < readPoints) _prr4.topRead = readPoints;
+        if (winLoos == Constants.WIN_CASE) _prr4.wins++;
+        if (winLoos == Constants.LOSE_CASE) _prr4.looses++;
         break;
     }
 
@@ -753,8 +767,11 @@ class _InGamePage extends State<InGamePage> {
     item.team2HandPoints = team2Points.toString();
     item.whichColor = winLoos;
 
-    listItems.add(item);
-    updateTextViewResults();
+    setState(() {
+      listItems.add(item);
+    });
+
+    _updateTextViewResults();
 
     if (_isKons) {
       int _winner = -1; // 1 for team1 and 2 for team2
@@ -771,7 +788,10 @@ class _InGamePage extends State<InGamePage> {
           _winner = 1;
         }
       }
-      btnGameState = false;
+
+      setState(() {
+        btnGameState = false;
+      });
 
       _createWinnerDialog(context, _winner, "nrm");
     } else {
@@ -782,46 +802,60 @@ class _InGamePage extends State<InGamePage> {
   //BUILD
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        title: Text(S.of(context).gameChart),
-      ),
-      drawer: SideDrawer(),
-      body: Column(
-        children: <Widget>[
-          _buildHeader(),
-          Expanded(
-            child: ChartListView(
-              listItems,
-              t1p1,
-              t1p2,
-              t2p1,
-              t2p2,
-              setBtnStartState,
-              updateTextViewResults,
-              _changeButtonOpenCloseText,
-              changeButtonText,
+    String languageCode = Localizations
+        .localeOf(context)
+        .languageCode;
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: Scaffold(
+        appBar: AppBar(
+          elevation: 0,
+          title: Text(S
+              .of(context)
+              .gameChart),
+          actions: <Widget>[
+            IconButton(
+                icon: Icon(Icons.line_style), onPressed: _updateListTypeIndex)
+          ],
+        ),
+        drawer: SideDrawer(),
+        body: Column(
+          children: <Widget>[
+            _buildHeader(languageCode),
+            Expanded(
+              child: ChartListView(
+                listItems,
+                _t1p1,
+                _t1p2,
+                _t2p1,
+                _t2p2,
+                _setBtnStartState,
+                _updateTextViewResults,
+                _changeButtonOpenCloseText,
+                _changeButtonText,
+                _listTypeIndex,
+              ),
             ),
-          ),
-        ],
-      ),
-      bottomNavigationBar: BottomBarInGame(_buildBottomResultsBar()),
-      floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            if (!btnGameState)
-              return null;
-            else {
-              if (_changeButtonOpenCloseText) {
-                _showOpenHandDialog();
-              } else {
-                _showCloseHandDialog();
+          ],
+        ),
+        bottomNavigationBar:
+        BottomBarInGame(_buildBottomResultsBar(languageCode)),
+        floatingActionButton: FloatingActionButton(
+            onPressed: () {
+              if (!btnGameState)
+                return null;
+              else {
+                if (_changeButtonOpenCloseText) {
+                  _showOpenHandDialog();
+                } else {
+                  _showCloseHandDialog();
+                }
               }
-            }
-          },
-          backgroundColor: Color(0xFFF17532),
-          child: _createStartButtonIcon()),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+            },
+            backgroundColor: Color(0xFFF17532),
+            child: _createStartButtonIcon()),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      ),
     );
   }
 

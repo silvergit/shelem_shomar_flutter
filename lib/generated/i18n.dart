@@ -8,16 +8,17 @@ import 'package:intl/intl.dart';
 import 'messages_all.dart';
 
 class S {
-  static const GeneratedLocalizationsDelegate delegate =
-      GeneratedLocalizationsDelegate();
+
+  static const GeneratedLocalizationsDelegate delegate = GeneratedLocalizationsDelegate();
 
   static S of(BuildContext context) {
     return Localizations.of<S>(context, S);
   }
 
   static Future<S> load(Locale locale) {
-    final String name =
-        locale.countryCode == null ? locale.languageCode : locale.toString();
+    final String name = locale.countryCode == null
+        ? locale.languageCode
+        : locale.toString();
 
     final String localeName = Intl.canonicalizedLocale(name);
 
@@ -25,6 +26,11 @@ class S {
       Intl.defaultLocale = localeName;
       return new S();
     });
+  }
+
+  String get UseCommand {
+    return Intl.message(
+        "flutter pub run gen_lang:generate", name: 'UseCommand');
   }
 
   String get shelemShomar {
@@ -64,8 +70,8 @@ class S {
   }
 
   String get aCounterAppForShelemGame {
-    return Intl.message("A counter app for Shelem game.",
-        name: 'aCounterAppForShelemGame');
+    return Intl.message(
+        "A counter app for Shelem game.", name: 'aCounterAppForShelemGame');
   }
 
   String get developer {
@@ -226,8 +232,8 @@ class S {
   }
 
   String get selectAllPlayerNames {
-    return Intl.message("Select all player names",
-        name: 'selectAllPlayerNames');
+    return Intl.message(
+        "Select all player names", name: 'selectAllPlayerNames');
   }
 
   String get ok {
@@ -348,8 +354,9 @@ class S {
   }
 
   String areYouWantToDelete(name) {
-    return Intl.message("Are you want to delete ${name}?",
-        name: 'areYouWantToDelete', args: [name]);
+    return Intl.message(
+        "Are you want to delete ${name}?", name: 'areYouWantToDelete',
+        args: [name]);
   }
 
   String get cannotRemoveThePlayerWhoPlayedGame {
@@ -367,13 +374,13 @@ class S {
   }
 
   String get getPointsIsIncorrect {
-    return Intl.message("Get points is incorrect",
-        name: 'getPointsIsIncorrect');
+    return Intl.message(
+        "Get points is incorrect", name: 'getPointsIsIncorrect');
   }
 
   String get readPointsIsIncorrect {
-    return Intl.message("Read Points is incorrect",
-        name: 'readPointsIsIncorrect');
+    return Intl.message(
+        "Read Points is incorrect", name: 'readPointsIsIncorrect');
   }
 
   String readPointsMustBeEqualOrSmallerThan(get) {
@@ -408,12 +415,13 @@ class S {
   }
 
   String get backupAllDataToMemory {
-    return Intl.message("Backup all data to phone memory",
-        name: 'backupAllDataToMemory');
+    return Intl.message(
+        "Backup all data to phone memory", name: 'backupAllDataToMemory');
   }
 
   String get youCanExportBackupsToAnotherPhoneAndUseIt {
-    return Intl.message("You can export backups to another phone and use it",
+    return Intl.message(
+        "You can export backups to another phone and use it in this phone.",
         name: 'youCanExportBackupsToAnotherPhoneAndUseIt');
   }
 
@@ -426,8 +434,8 @@ class S {
   }
 
   String get youCanSeeBackupFilesHere {
-    return Intl.message("You can see backup files here",
-        name: 'youCanSeeBackupFilesHere');
+    return Intl.message(
+        "You can see backup files here", name: 'youCanSeeBackupFilesHere');
   }
 
   String get pleaseSelectBackupToRestoreIt {
@@ -437,7 +445,7 @@ class S {
 
   String get afterRestoringAllPreviousDataFromTheProgramWillBeReplaced {
     return Intl.message(
-        "After restoring, all previous data from the program will be replaced. Make sure to have a backup first",
+        "After restoring, all previous data from the program will be replaced. Make sure to have a backup first.",
         name: 'afterRestoringAllPreviousDataFromTheProgramWillBeReplaced');
   }
 
@@ -452,8 +460,8 @@ class S {
   }
 
   String get orSelectFromPhoneMemory {
-    return Intl.message("Or select from phone memory",
-        name: 'orSelectFromPhoneMemory');
+    return Intl.message(
+        "Or select from phone memory", name: 'orSelectFromPhoneMemory');
   }
 
   String get selectBackupFile {
@@ -461,23 +469,23 @@ class S {
   }
 
   String get thereIsNoBackupFileHere {
-    return Intl.message("There is no backup file here",
-        name: 'thereIsNoBackupFileHere');
+    return Intl.message(
+        "There is no backup file here", name: 'thereIsNoBackupFileHere');
   }
 
   String get youChooseSamePlayers {
-    return Intl.message("You choose same players",
-        name: 'youChooseSamePlayers');
+    return Intl.message(
+        "You choose same players", name: 'youChooseSamePlayers');
   }
 
   String get reloadPageToSeeChanges {
-    return Intl.message("Reload page to see changes",
-        name: 'reloadPageToSeeChanges');
+    return Intl.message(
+        "Reload page to see changes", name: 'reloadPageToSeeChanges');
   }
 
   String get failedToRemovePrefMemory {
-    return Intl.message("Failed to remove pref memory",
-        name: 'failedToRemovePrefMemory');
+    return Intl.message(
+        "Failed to remove pref memory", name: 'failedToRemovePrefMemory');
   }
 
   String get theme {
@@ -489,18 +497,18 @@ class S {
   }
 
   String get doYouWantToDeleteAppData {
-    return Intl.message("Do you want to delete App data",
-        name: 'doYouWantToDeleteAppData');
+    return Intl.message(
+        "Do you want to delete App data", name: 'doYouWantToDeleteAppData');
   }
 
   String get databaseFileIsNotExist {
-    return Intl.message("Database file is not exist",
-        name: 'databaseFileIsNotExist');
+    return Intl.message(
+        "Database file is not exist", name: 'databaseFileIsNotExist');
   }
 
   String get failedToCreateBackupFile {
-    return Intl.message("Failed to create backup file",
-        name: 'failedToCreateBackupFile');
+    return Intl.message(
+        "Failed to create backup file", name: 'failedToCreateBackupFile');
   }
 
   String get backupFileCreatedSuccessfully {
@@ -509,13 +517,13 @@ class S {
   }
 
   String get databaseDeletedSuccessfully {
-    return Intl.message("Database deleted successfully",
-        name: 'databaseDeletedSuccessfully');
+    return Intl.message(
+        "Database deleted successfully", name: 'databaseDeletedSuccessfully');
   }
 
   String get failedToDeleteDatabaseFile {
-    return Intl.message("Failed to delete Database file",
-        name: 'failedToDeleteDatabaseFile');
+    return Intl.message(
+        "Failed to delete Database file", name: 'failedToDeleteDatabaseFile');
   }
 
   String get databaseFileRestoredSuccessfully {
@@ -524,8 +532,8 @@ class S {
   }
 
   String get failedToRestoreBackupFile {
-    return Intl.message("Failed to restore backup file",
-        name: 'failedToRestoreBackupFile');
+    return Intl.message(
+        "Failed to restore backup file", name: 'failedToRestoreBackupFile');
   }
 
   String get doYouWantToDeleteBackupFile {
@@ -546,6 +554,49 @@ class S {
   String get created {
     return Intl.message("Created", name: 'created');
   }
+
+  String get slm {
+    return Intl.message("Slm", name: 'slm');
+  }
+
+  String get kns {
+    return Intl.message("Kns", name: 'kns');
+  }
+
+  String get deleteFormDefaultValues {
+    return Intl.message(
+        "Delete form default values", name: 'deleteFormDefaultValues');
+  }
+
+  String get getPointsAfter1100 {
+    return Intl.message("Get points after 1100", name: 'getPointsAfter1100');
+  }
+
+  String get write {
+    return Intl.message("Write", name: 'write');
+  }
+
+  String get doNotWrite {
+    return Intl.message("Don`t write", name: 'doNotWrite');
+  }
+
+  String get doYouWantToExit {
+    return Intl.message("Do you want to exit?", name: 'doYouWantToExit');
+  }
+
+  String get areYouSure {
+    return Intl.message("Are you sure?", name: 'areYouSure');
+  }
+
+  String get yes {
+    return Intl.message("Yes", name: 'yes');
+  }
+
+  String get no {
+    return Intl.message("No", name: 'no');
+  }
+
+
 }
 
 class GeneratedLocalizationsDelegate extends LocalizationsDelegate<S> {
@@ -555,6 +606,7 @@ class GeneratedLocalizationsDelegate extends LocalizationsDelegate<S> {
     return const <Locale>[
       Locale("en", ""),
       Locale("fa", ""),
+
     ];
   }
 

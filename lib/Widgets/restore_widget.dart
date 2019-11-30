@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_extend/share_extend.dart';
+import 'package:shelem_shomar/Widgets/text-with-locale-support.dart';
 import 'package:shelem_shomar/generated/i18n.dart';
 import 'package:shelem_shomar/helpers/filesize.dart';
 
@@ -160,6 +161,10 @@ class _RestoreWidgetState extends State<RestoreWidget> {
 
   @override
   Widget build(BuildContext context) {
+    String languageCode = Localizations
+        .localeOf(context)
+        .languageCode;
+
     return Column(
       children: <Widget>[
         Card(
@@ -185,66 +190,81 @@ class _RestoreWidgetState extends State<RestoreWidget> {
         ),
         backupFiles.length == 0
             ? Expanded(
-                child: Center(
-                child: Center(
-                  child: Text(
-                    S.of(context).thereIsNoBackupFileHere,
-                    style: Theme.of(context).textTheme.body2,
-                  ),
-                ),
-              ))
-            : Expanded(
-                child: ListView.builder(
-                  itemCount: backupFiles.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return Column(
-                      children: <Widget>[
-                        ListTile(
-                          title: Text(basename(backupFiles[index])),
-                          subtitle: Column(
-                            children: <Widget>[
-                              Text(S.of(context).size +
-                                  ': ' +
-                                  _getBackupFileSize(backupFiles[index])),
-                              Text(S.of(context).created +
-                                  ': ' +
-                                  _getBackupLastModified(backupFiles[index])),
-                            ],
-                          ),
-                          trailing: Container(
-                            width: 100.0,
-                            child: Row(
-                              children: <Widget>[
-                                IconButton(
-                                  icon: Icon(
-                                    Icons.share,
-                                    color: Colors.green,
-                                  ),
-                                  onPressed: () {
-                                    _shareBackupFile(backupFiles[index]);
-                                  },
-                                ),
-                                IconButton(
-                                  icon: Icon(
-                                    Icons.delete,
-                                    color: Colors.red,
-                                  ),
-                                  onPressed: () {
-                                    _deleteBackupFile(context, index);
-                                  },
-                                ),
-                              ],
-                            ),
-                          ),
-                          onTap: () => _copyDataBaseToBackupFolder(
-                              context, backupFiles[index]),
-                        ),
-                        Divider(),
-                      ],
-                    );
-                  },
+            child: Center(
+              child: Center(
+                child: Text(
+                  S
+                      .of(context)
+                      .thereIsNoBackupFileHere,
+                  style: Theme
+                      .of(context)
+                      .textTheme
+                      .body2,
                 ),
               ),
+            ))
+            : Expanded(
+          child: ListView.builder(
+            itemCount: backupFiles.length,
+            itemBuilder: (BuildContext context, int index) {
+              return Column(
+                children: <Widget>[
+                  ListTile(
+                    title: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: TextWithLocale(
+                            basename(backupFiles[index]), 'en')),
+                    subtitle: Column(
+                      children: <Widget>[
+                        TextWithLocale(S
+                            .of(context)
+                            .size +
+                            ': ' +
+                            _getBackupFileSize(backupFiles[index]),
+                            languageCode),
+                        TextWithLocale(S
+                            .of(context)
+                            .created +
+                            ': ' +
+                            _getBackupLastModified(backupFiles[index]),
+                            languageCode),
+                      ],
+                    ),
+                    trailing: Container(
+                      width: 100.0,
+                      child: Row(
+                        children: <Widget>[
+                          IconButton(
+                            icon: Icon(
+                              Icons.share,
+                              color: Colors.green,
+                            ),
+                            onPressed: () {
+                              _shareBackupFile(backupFiles[index]);
+                            },
+                          ),
+                          IconButton(
+                            icon: Icon(
+                              Icons.delete,
+                              color: Colors.red,
+                            ),
+                            onPressed: () {
+                              _deleteBackupFile(context, index);
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                    onTap: () =>
+                        _copyDataBaseToBackupFolder(
+                            context, backupFiles[index]),
+                  ),
+                  Divider(),
+                ],
+              );
+            },
+          ),
+        ),
         SizedBox(
           height: 20.0,
         ),

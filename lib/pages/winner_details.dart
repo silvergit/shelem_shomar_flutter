@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shelem_shomar/Widgets/custom_circle_avatar.dart';
 import 'package:shelem_shomar/Widgets/score_label.dart';
 import 'package:shelem_shomar/Widgets/side_drawer.dart';
+import 'package:shelem_shomar/Widgets/text-with-locale-support.dart';
 import 'package:shelem_shomar/generated/i18n.dart';
 import 'package:shelem_shomar/pages/in_game.dart';
 
@@ -88,7 +89,7 @@ class _WinnerDetailsState extends State<WinnerDetails>
     return result;
   }
 
-  Widget _buildTopCard() {
+  Widget _buildTopCard(String languageCode) {
     return Card(
       color: Theme.of(context).cardColor,
       child: Column(
@@ -129,7 +130,7 @@ class _WinnerDetailsState extends State<WinnerDetails>
                     Expanded(
                       child: Column(
                         children: <Widget>[
-                          Text(widget.gameTime),
+                          TextWithLocale(widget.gameTime, languageCode),
                           ScoreLabel(
                             widget.team1Points.toString() +
                                 ' : ' +
@@ -180,23 +181,33 @@ class _WinnerDetailsState extends State<WinnerDetails>
             children: <Widget>[
               Container(
                 padding: EdgeInsets.all(8.0),
-//                  color: Theme.of(context).primaryColor,
                 child: Column(
                   children: <Widget>[
-                    Text('${S.of(context).handsPlayed}: ${widget.length}'),
-                    Text('${S.of(context).maxReadIs}: ${getMaxRead()}'),
-                    Text('${S.of(context).gameFinishedIn}: ${widget.gameTime}'),
-                    Text(
-                        '${S.of(context).doublePositive}: ${widget.dPosCount}'),
-                    Text(
-                        '${S.of(context).doubleNegative}: ${widget.dNegCount}'),
+                    TextWithLocale('${S
+                        .of(context)
+                        .handsPlayed}: ${widget.length}', languageCode),
+                    TextWithLocale('${S
+                        .of(context)
+                        .maxReadIs}: ${getMaxRead()}', languageCode),
+                    TextWithLocale('${S
+                        .of(context)
+                        .gameFinishedIn}: ${widget.gameTime}', languageCode),
+                    TextWithLocale(
+                        '${S
+                            .of(context)
+                            .doublePositive}: ${widget.dPosCount}',
+                        languageCode),
+                    TextWithLocale(
+                        '${S
+                            .of(context)
+                            .doubleNegative}: ${widget.dNegCount}',
+                        languageCode),
                   ],
                 ),
               ),
               Container(
                 margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
                 padding: EdgeInsets.all(10.0),
-//                  color: Theme.of(context).primaryColor,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
@@ -215,13 +226,21 @@ class _WinnerDetailsState extends State<WinnerDetails>
                     SizedBox(
                       height: 20.0,
                     ),
-                    Text(widget.team1Points.toString(),
-                        style: Theme.of(context).textTheme.subtitle),
+                    TextWithLocale(widget.team1Points.toString(), languageCode,
+                        fontSize: Theme
+                            .of(context)
+                            .textTheme
+                            .subtitle
+                            .fontSize),
                     SizedBox(
                       height: 4.0,
                     ),
-                    Text(widget.team2Points.toString(),
-                        style: Theme.of(context).textTheme.subtitle),
+                    TextWithLocale(widget.team2Points.toString(), languageCode,
+                        fontSize: Theme
+                            .of(context)
+                            .textTheme
+                            .subtitle
+                            .fontSize),
                   ],
                 ),
               ),
@@ -232,7 +251,7 @@ class _WinnerDetailsState extends State<WinnerDetails>
     );
   }
 
-  Widget _buildPlayerCards(PlayerReadRecords player) {
+  Widget _buildPlayerCards(PlayerReadRecords player, String languageCode) {
     return Card(
       color: Theme.of(context).cardColor,
       margin: EdgeInsets.all(2.0),
@@ -261,15 +280,32 @@ class _WinnerDetailsState extends State<WinnerDetails>
             Column(
               children: <Widget>[
                 ScoreLabel(getPlayerScore(player).toString()),
-                Text('${S.of(context).wins} : ${player.wins}',
-                    style: Theme.of(context).textTheme.body1),
-                Text('${S.of(context).looses} : ${player.looses}',
-                    style: Theme.of(context).textTheme.body1),
-                Text(
-                    '${S.of(context).topRead} : ${getStringRead(player.topRead)}',
-                    style: Theme.of(context).textTheme.body1),
-//                Text('${S.of(context).readCount} : ${player.readCount}',
-//                    style: Theme.of(context).textTheme.body1),
+                TextWithLocale('${S
+                    .of(context)
+                    .wins} : ${player.wins}', languageCode,
+                    fontSize: Theme
+                        .of(context)
+                        .textTheme
+                        .body1
+                        .fontSize),
+                TextWithLocale('${S
+                    .of(context)
+                    .looses} : ${player.looses}', languageCode,
+                    fontSize: Theme
+                        .of(context)
+                        .textTheme
+                        .body1
+                        .fontSize),
+                TextWithLocale(
+                    '${S
+                        .of(context)
+                        .topRead} : ${getStringRead(player.topRead)}',
+                    languageCode,
+                    fontSize: Theme
+                        .of(context)
+                        .textTheme
+                        .body1
+                        .fontSize),
               ],
             ),
           ],
@@ -280,8 +316,10 @@ class _WinnerDetailsState extends State<WinnerDetails>
 
   @override
   Widget build(BuildContext context) {
+    String languageCode = Localizations
+        .localeOf(context)
+        .languageCode;
     return Scaffold(
-//      backgroundColor: Theme.of(context).primaryColor,
       appBar: AppBar(
         title: Text(S.of(context).gameDetails),
         elevation: 0,
@@ -289,14 +327,14 @@ class _WinnerDetailsState extends State<WinnerDetails>
       drawer: SideDrawer(),
       body: Column(
         children: <Widget>[
-          _buildTopCard(),
+          _buildTopCard(languageCode),
           Expanded(
             child: ListView(
               children: <Widget>[
-                _buildPlayerCards(widget.playerReadRecords[0]),
-                _buildPlayerCards(widget.playerReadRecords[1]),
-                _buildPlayerCards(widget.playerReadRecords[2]),
-                _buildPlayerCards(widget.playerReadRecords[3]),
+                _buildPlayerCards(widget.playerReadRecords[0], languageCode),
+                _buildPlayerCards(widget.playerReadRecords[1], languageCode),
+                _buildPlayerCards(widget.playerReadRecords[2], languageCode),
+                _buildPlayerCards(widget.playerReadRecords[3], languageCode),
               ],
             ),
           )

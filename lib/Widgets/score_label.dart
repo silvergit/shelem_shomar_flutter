@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shelem_shomar/Widgets/text-with-locale-support.dart';
 
 class ScoreLabel extends StatelessWidget {
   final String score;
@@ -11,7 +12,6 @@ class ScoreLabel extends StatelessWidget {
   final double bottomPadding;
   final double margin;
   final Color backColor;
-  final TextDirection direction;
 
   ScoreLabel(this.score,
       {this.width = 80.0,
@@ -22,11 +22,14 @@ class ScoreLabel extends StatelessWidget {
       this.topPadding = 8.0,
       this.bottomPadding = 8.0,
       this.margin = 8.0,
-      this.backColor,
-      this.direction = TextDirection.ltr});
+        this.backColor});
 
   @override
   Widget build(BuildContext context) {
+    String languageCode = Localizations
+        .localeOf(context)
+        .languageCode;
+
     return Container(
       padding: EdgeInsets.only(top: topPadding, bottom: bottomPadding),
       margin: EdgeInsets.symmetric(horizontal: margin),
@@ -40,9 +43,8 @@ class ScoreLabel extends StatelessWidget {
             color: backColor == null
                 ? Colors.transparent.withOpacity(transparent)
                 : backColor),
-        child: Text(score,
-            style: TextStyle(fontSize: fontSize, color: fontColor),
-            textDirection: direction),
+        child: TextWithLocale(score, languageCode,
+            fontSize: fontSize, fontColor: fontColor),
       ),
     );
   }

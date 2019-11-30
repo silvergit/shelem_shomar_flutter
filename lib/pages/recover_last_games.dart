@@ -1,6 +1,7 @@
 import 'dart:core';
 
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shelem_shomar/ListView/chart_listview_last_games.dart';
 import 'package:shelem_shomar/Widgets/bottom-bar-newgame.dart';
 import 'package:shelem_shomar/Widgets/custom_circle_avatar.dart';
@@ -28,6 +29,45 @@ class _RecoverLastGamesState extends State<RecoverLastGames> {
   SizedBox _verticalGap = SizedBox(
     width: 10.0,
   );
+
+  int _listTypeIndex;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadSharedPreferences();
+  }
+
+  void _updateListTypeIndex() {
+    int maxIndex = 2;
+    if (_listTypeIndex + 1 > maxIndex)
+      setState(() {
+        _listTypeIndex = 0;
+      });
+    else
+      setState(() {
+        _listTypeIndex++;
+      });
+    _saveSharedPreferences();
+  }
+
+  void _saveSharedPreferences() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('listTypeLastGames', _listTypeIndex);
+  }
+
+  void _loadSharedPreferences() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (prefs.getInt('listTypeLastGames') != null) {
+      setState(() {
+        _listTypeIndex = prefs.getInt('listTypeLastGames');
+      });
+    } else {
+      setState(() {
+        _listTypeIndex = 0;
+      });
+    }
+  }
 
   Widget _buildHeader(BuildContext context) {
     return Container(
@@ -120,6 +160,10 @@ class _RecoverLastGamesState extends State<RecoverLastGames> {
       appBar: AppBar(
         elevation: 0,
         title: Text(S.of(context).gameChart),
+        actions: <Widget>[
+          IconButton(
+              icon: Icon(Icons.line_style), onPressed: _updateListTypeIndex)
+        ],
       ),
       drawer: SideDrawer(),
       body: Column(
@@ -155,8 +199,8 @@ class _RecoverLastGamesState extends State<RecoverLastGames> {
                   case ConnectionState.done:
                     if (snapshot.hasError)
                       return Text('${S.of(context).error}: ${snapshot.error}');
-                    return ChartListViewLastGames(
-                        snapshot.data.players, snapshot.data.points);
+                    return ChartListViewLastGames(snapshot.data.players,
+                        snapshot.data.points, _listTypeIndex);
                 }
                 return null; // unreachable
               },

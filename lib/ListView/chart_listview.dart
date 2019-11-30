@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable_list_view/flutter_slidable_list_view.dart';
+import 'package:shelem_shomar/Widgets/custom_circle_avatar.dart';
+import 'package:shelem_shomar/Widgets/text-with-locale-support.dart';
 import 'package:shelem_shomar/generated/i18n.dart';
 import 'package:shelem_shomar/models/constants.dart';
 import 'package:shelem_shomar/models/in_game_list_item.dart';
@@ -18,6 +20,7 @@ class ChartListView extends StatefulWidget {
   final PlayerTable t1p2;
   final PlayerTable t2p1;
   final PlayerTable t2p2;
+  final int listTypeIndex;
 
   ChartListView(
     this.points,
@@ -29,6 +32,7 @@ class ChartListView extends StatefulWidget {
     this.updateResults,
     this.buttonOpenCloseText,
     this.changeButtonStartEndState,
+      this.listTypeIndex,
   );
 
   @override
@@ -41,6 +45,7 @@ class _ChartListView extends State<ChartListView> {
   bool isDeleted = false;
   EdgeInsets itemPadding = EdgeInsets.all(8.0);
   EdgeInsets colorBoxPadding = EdgeInsets.all(4.0);
+  Locale myLocale;
   SizedBox verticalGap = SizedBox(
     width: 4.0,
   );
@@ -113,6 +118,8 @@ class _ChartListView extends State<ChartListView> {
       case 4:
         name = widget.t2p2.name;
         break;
+      default:
+        name = 'Last points';
     }
     return name;
   }
@@ -130,7 +137,256 @@ class _ChartListView extends State<ChartListView> {
     widget.updateResults();
   }
 
-  Widget _buildBody(int index) {
+  _buildBody(int index) {
+    myLocale = Localizations.localeOf(context);
+    switch (widget.listTypeIndex) {
+      case 0:
+        return _linearColorType(index, myLocale.languageCode);
+        break;
+      case 1:
+        return _gradientColorType(index, myLocale.languageCode);
+        break;
+      case 2:
+        return _simpleType(index, myLocale.languageCode);
+        break;
+    }
+  }
+
+  Widget _gradientColorType(int index, String languageCode) {
+    Map<String, Color> colors = _chooseGradientColor(index);
+    List<PlayerTable> players = [
+      widget.t1p1,
+      widget.t1p2,
+      widget.t2p1,
+      widget.t2p2
+    ];
+
+    return Container(
+      child: Row(
+        children: <Widget>[
+          Container(
+            width: 32.0,
+            padding: itemPadding,
+            color: Colors.grey,
+            child: TextWithLocale((index + 1).toString(), languageCode),
+          ),
+          verticalGap,
+          CustomCircleAvatar(
+            index > 0 ? players[widget.points[index].starter - 1].avatar : null,
+            radius: 15.0,
+            iconSize: 15.0,
+          ),
+          verticalGap,
+          Expanded(
+            child: Stack(
+              alignment: Alignment.center,
+              children: <Widget>[
+                Visibility(
+                  visible: widget.points[index].starter == 1 ||
+                      widget.points[index].starter == 2
+                      ? true
+                      : false,
+                  child: Positioned(
+                    right: 50.0,
+                    left: 0.0,
+                    child: Container(
+                      padding: EdgeInsets.all(8.0),
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.centerLeft,
+                          end: Alignment.centerRight,
+                          colors: [colors['1'], Colors.white],
+                        ),
+                      ),
+                      child: Text(''),
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: widget.points[index].starter == 3 ||
+                      widget.points[index].starter == 4
+                      ? true
+                      : false,
+                  child: Positioned(
+                    left: 50.0,
+                    right: 0.0,
+                    child: Container(
+                      padding: EdgeInsets.all(8.0),
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.centerRight,
+                          end: Alignment.centerLeft,
+                          colors: [colors['2'], Colors.white],
+                        ),
+                      ),
+                      child: Text(''),
+                    ),
+                  ),
+                ),
+                Container(
+                  padding: EdgeInsets.all(8.0),
+                  child: SingleChildScrollView(
+                    child: Text(
+                      _getStarterName(index, widget.points[index].starter),
+                      textAlign: TextAlign.center,
+                      maxLines: 1,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          verticalGap,
+          Container(
+            padding: itemPadding,
+            width: 50.0,
+            child: TextWithLocale(
+              widget.points[index].team1HandPoints,
+              languageCode,
+            ),
+          ),
+          Container(
+            color: Colors.grey.shade200,
+            padding: itemPadding,
+            width: 50.0,
+            child: TextWithLocale(
+              widget.points[index].readPoints,
+              languageCode,
+            ),
+          ),
+          Container(
+            padding: itemPadding,
+            width: 50.0,
+            child: TextWithLocale(
+              widget.points[index].team2HandPoints,
+              languageCode,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Map<String, Color> _chooseGradientColor(int index) {
+    String gameCase = widget.points[index].whichColor;
+    int starter = widget.points[index].starter;
+
+    Color winColor = Colors.green.shade400;
+    Color lossColor = Colors.red.shade400;
+    Color defaultColor = Colors.orange.shade300;
+    Color noColor = Colors.white;
+
+    Color color1;
+    Color color2;
+
+    if (starter == 1 || starter == 2) {
+      switch (gameCase) {
+        case Constants.READ_CASE:
+          color1 = defaultColor;
+          color2 = noColor;
+          break;
+        case Constants.WIN_CASE:
+          color1 = winColor;
+          color2 = noColor;
+          break;
+        case Constants.LOSE_CASE:
+          color1 = lossColor;
+          color2 = noColor;
+          break;
+      }
+    }
+    if (starter == 3 || starter == 4) {
+      switch (gameCase) {
+        case Constants.READ_CASE:
+          color1 = noColor;
+          color2 = defaultColor;
+          break;
+        case Constants.WIN_CASE:
+          color1 = noColor;
+          color2 = winColor;
+          break;
+        case Constants.LOSE_CASE:
+          color1 = noColor;
+          color2 = lossColor;
+          break;
+      }
+    }
+    if (starter == 0) {
+      color1 = noColor;
+      color2 = noColor;
+    }
+
+    Map<String, Color> colors = {'1': color1, '2': color2};
+
+    return colors;
+  }
+
+  Widget _simpleType(int index, String languageCode) {
+    List<PlayerTable> players = [
+      widget.t1p1,
+      widget.t1p2,
+      widget.t2p1,
+      widget.t2p2
+    ];
+
+    return ListTile(
+      contentPadding: EdgeInsets.all(0.0),
+      leading: Container(
+        width: 32.0,
+        padding: EdgeInsets.all(10.0),
+        color: Theme
+            .of(context)
+            .cardColor,
+        child: TextWithLocale((index + 1).toString(), languageCode),
+      ),
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          CustomCircleAvatar(
+            widget.points[index].starter > 0
+                ? players[widget.points[index].starter - 1].avatar
+                : null,
+            radius: 15.0,
+            iconSize: 15.0,
+          ),
+          SizedBox(
+            width: 20.0,
+          ),
+          Container(
+              width: 60.0,
+              child: TextWithLocale(
+                  widget.points[index].team1HandPoints, languageCode)),
+          Container(
+            width: 60.0,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                Visibility(
+                    visible: widget.points[index].starter == 1 ||
+                        widget.points[index].starter == 2
+                        ? true
+                        : false,
+                    child: Icon(Icons.arrow_left)),
+                TextWithLocale(widget.points[index].readPoints, languageCode),
+                Visibility(
+                    visible: widget.points[index].starter == 3 ||
+                        widget.points[index].starter == 4
+                        ? true
+                        : false,
+                    child: Icon(Icons.arrow_right)),
+              ],
+            ),
+          ),
+          Container(
+              width: 60.0,
+              child: TextWithLocale(
+                  widget.points[index].team2HandPoints, languageCode)),
+        ],
+      ),
+    );
+  }
+
+  Widget _linearColorType(int index, String languageCode) {
     return Container(
       color: Theme.of(context).cardColor,
       child: ListTile(
@@ -139,7 +395,7 @@ class _ChartListView extends State<ChartListView> {
           width: 32.0,
           padding: itemPadding,
           color: Theme.of(context).cardColor,
-          child: Text((index + 1).toString()),
+          child: TextWithLocale((index + 1).toString(), languageCode),
         ),
         title: Container(
           child: Row(
@@ -156,14 +412,12 @@ class _ChartListView extends State<ChartListView> {
               ),
               Container(
                 padding: itemPadding,
-                width: 50.0,
+                width: 55.0,
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text(
-                      widget.points[index].team1HandPoints,
-                      textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.body1,
-                    ),
+                    TextWithLocale(
+                        widget.points[index].team1HandPoints, languageCode),
                     _buildBoxColor(index, '1'),
                   ],
                 ),
@@ -173,23 +427,18 @@ class _ChartListView extends State<ChartListView> {
                 color: Theme.of(context).cardColor,
                 padding: itemPadding,
                 width: 50.0,
-                child: Text(
-                  widget.points[index].readPoints,
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.body1,
-                ),
+                child: TextWithLocale(
+                    widget.points[index].readPoints, languageCode),
               ),
               _buildVerticalDivider(),
               Container(
                 padding: itemPadding,
-                width: 50.0,
+                width: 55.0,
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
                   children: <Widget>[
-                    Text(
-                      widget.points[index].team2HandPoints,
-                      textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.body1,
-                    ),
+                    TextWithLocale(
+                        widget.points[index].team2HandPoints, languageCode),
                     _buildBoxColor(index, '2'),
                   ],
                 ),

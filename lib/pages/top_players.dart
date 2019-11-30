@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shelem_shomar/ListView/top_players_listview.dart';
 import 'package:shelem_shomar/Widgets/side_drawer.dart';
 import 'package:shelem_shomar/generated/i18n.dart';
@@ -14,12 +15,54 @@ class TopPlayers extends StatefulWidget {
 
 class _TopPlayersState extends State<TopPlayers> {
   var db = DBHelper();
+  int _listGridTypeIndex;
+
+  void _updateListGridTypeIndex() {
+    int maxIndex = 1;
+    if (_listGridTypeIndex + 1 > maxIndex)
+      setState(() {
+        _listGridTypeIndex = 0;
+      });
+    else
+      setState(() {
+        _listGridTypeIndex++;
+      });
+    _saveSharedPreferences();
+  }
+
+  void _saveSharedPreferences() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('listGridTypeTopPlayers', _listGridTypeIndex);
+  }
+
+  void _loadSharedPreferences() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (prefs.getInt('listGridTypeTopPlayers') != null) {
+      setState(() {
+        _listGridTypeIndex = prefs.getInt('listGridTypeTopPlayers');
+      });
+    } else {
+      setState(() {
+        _listGridTypeIndex = 0;
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadSharedPreferences();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(S.of(context).topPlayers),
+        actions: <Widget>[
+          IconButton(
+              icon: Icon(Icons.line_style), onPressed: _updateListGridTypeIndex)
+        ],
       ),
       drawer: SideDrawer(),
       body: FutureBuilder(
@@ -37,7 +80,7 @@ class _TopPlayersState extends State<TopPlayers> {
           var data = snapshot.data;
 
           return snapshot.hasData
-              ? TopPlayersListView(data)
+              ? TopPlayersListView(data, _listGridTypeIndex)
               : Center(
                   child: Text(
                     S.of(context).addPlayersAndPlayGamesFirst,

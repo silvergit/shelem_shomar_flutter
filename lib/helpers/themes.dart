@@ -28,7 +28,7 @@ class MyThemes {
     accentColor: Colors.blue.shade800,
     cardColor: Colors.grey.shade700,
     brightness: Brightness.dark,
-    canvasColor: Colors.grey.shade800,
+    canvasColor: Colors.grey.shade600,
     fontFamily: 'vazir',
     secondaryHeaderColor: Colors.blueGrey.shade200,
     chipTheme: ChipThemeData(
@@ -45,12 +45,16 @@ class MyThemes {
         elevation: 10.0),
     textTheme: TextTheme(
       headline: TextStyle(
-          fontSize: 72.0, fontWeight: FontWeight.bold, color: Colors.black),
+          fontSize: 72.0,
+          fontWeight: FontWeight.bold,
+          color: Colors.grey.shade100),
       title: TextStyle(
-          fontSize: 36.0, fontStyle: FontStyle.italic, color: Colors.white),
-      subtitle: TextStyle(fontSize: 24.0, color: Colors.white),
-      body2: TextStyle(fontSize: 18.0, color: Colors.white),
-      body1: TextStyle(fontSize: 14.0, color: Colors.white),
+          fontSize: 36.0,
+          fontStyle: FontStyle.italic,
+          color: Colors.grey.shade100),
+      subtitle: TextStyle(fontSize: 24.0, color: Colors.grey.shade100),
+      body2: TextStyle(fontSize: 18.0, color: Colors.grey.shade100),
+      body1: TextStyle(fontSize: 14.0, color: Colors.grey.shade100),
     ),
     buttonColor: Colors.blue.shade800,
 //    buttonTheme: ButtonThemeData(textTheme: ButtonTextTheme.accent)

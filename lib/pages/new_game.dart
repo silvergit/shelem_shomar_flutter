@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shelem_shomar/Widgets/bottom-bar-newgame.dart';
 import 'package:shelem_shomar/Widgets/my-buttons.dart';
 import 'package:shelem_shomar/Widgets/side_drawer.dart';
+import 'package:shelem_shomar/Widgets/text-with-locale-support.dart';
 import 'package:shelem_shomar/generated/i18n.dart';
 import 'package:shelem_shomar/models/player_table.dart';
 import 'package:shelem_shomar/pages/in_game.dart';
@@ -20,6 +21,7 @@ class NewGamePage extends StatefulWidget {
 
 class _NewGamePage extends State<NewGamePage> {
   String _gameType = '';
+  bool _getAfter = false;
 
   PlayerTable t1p1 = PlayerTable();
   PlayerTable t1p2 = PlayerTable();
@@ -29,7 +31,8 @@ class _NewGamePage extends State<NewGamePage> {
   String t1InitPoints;
   String t2InitPoints;
 
-  int _gameTypeValue = 1;
+  int _gameTypeChipValue = 1;
+  int _getPointsChipValue = 2;
   int _doublePosValue = 0;
   int _doubleNegValue = 0;
 
@@ -48,14 +51,14 @@ class _NewGamePage extends State<NewGamePage> {
     await prefs.setStringList('t1p2', _t1p2);
     await prefs.setStringList('t2p1', _t2p1);
     await prefs.setStringList('t2p2', _t2p2);
-    await prefs.setInt("gameType", _gameTypeValue);
+    await prefs.setInt("gameType", _gameTypeChipValue);
     await prefs.setBool("dPoz", _doublePosValue == 0 ? false : true);
     await prefs.setBool("dNeg", _doubleNegValue == 0 ? false : true);
+    await prefs.setInt('getPointsAfter', _getPointsChipValue);
   }
 
   void _loadSharedPreferences() async {
     prefs = await SharedPreferences.getInstance();
-    print(prefs);
 
     PlayerTable _t1p1 = PlayerTable();
     PlayerTable _t1p2 = PlayerTable();
@@ -92,6 +95,8 @@ class _NewGamePage extends State<NewGamePage> {
     }
 
     int gType = prefs.getInt('gameType') == null ? 1 : prefs.getInt('gameType');
+    int getType = prefs.getInt('getPointsAfter') == null ? 1 : prefs.getInt(
+        'getPointsAfter');
     bool dPoz = prefs.getBool('dPoz') == null ? false : prefs.getBool('dPoz');
     bool dNeg = prefs.getBool('dNeg') == null ? false : prefs.getBool('dNeg');
 
@@ -109,7 +114,8 @@ class _NewGamePage extends State<NewGamePage> {
         t2p2 = _t2p2;
       }
 
-      _gameTypeValue = gType;
+      _gameTypeChipValue = gType;
+      _getPointsChipValue = getType;
       _doublePosValue = dPoz ? 1 : 0;
       _doubleNegValue = dNeg ? 1 : 0;
     });
@@ -135,10 +141,26 @@ class _NewGamePage extends State<NewGamePage> {
         }
       });
 
+  void _setGetPointsAfter(int value) =>
+      setState(() {
+        switch (value) {
+          case 1:
+            _getAfter = true;
+            break;
+          case 2:
+            _getAfter = false;
+            break;
+        }
+      });
+
   Widget _buildHeaderTexts(String text) {
-    return new Text(
-      text,
-      style: TextStyle(fontSize: 18.0, color: Colors.white),
+    return new TextWithLocale(
+      text, Localizations
+        .localeOf(context)
+        .languageCode,
+      fontSize: 18.0, fontColor: Colors.white,
+      textAlignEn: TextAlign.start,
+      textAlignFa: TextAlign.end,
     );
   }
 
@@ -308,16 +330,34 @@ class _NewGamePage extends State<NewGamePage> {
     );
   }
 
-  Widget _buildChoiceChips(String text, int value) {
+  Widget _buildGameTypeChips(String text, int value) {
+    return ChipTheme(
+      data: Theme
+          .of(context)
+          .chipTheme,
+      child: ChoiceChip(
+        label: Text(text),
+        selected: _gameTypeChipValue == value,
+        onSelected: (bool selected) {
+          setState(() {
+            _gameTypeChipValue = value;
+            _setGameType(_gameTypeChipValue);
+          });
+        },
+      ),
+    );
+  }
+
+  Widget _buildGetPointsChips(String text, int value) {
     return ChipTheme(
       data: Theme.of(context).chipTheme,
       child: ChoiceChip(
         label: Text(text),
-        selected: _gameTypeValue == value,
+        selected: _getPointsChipValue == value,
         onSelected: (bool selected) {
           setState(() {
-            _gameTypeValue = value;
-            _setGameType(_gameTypeValue);
+            _getPointsChipValue = value;
+            _setGetPointsAfter(_getPointsChipValue);
           });
         },
       ),
@@ -334,11 +374,11 @@ class _NewGamePage extends State<NewGamePage> {
             alignment: WrapAlignment.center,
             spacing: 10.0,
             children: <Widget>[
-              _buildChoiceChips('165', 1),
-              _buildChoiceChips('185', 2),
-              _buildChoiceChips('200', 3),
-              _buildChoiceChips('225', 4),
-              _buildChoiceChips('230', 5),
+              _buildGameTypeChips('165', 1),
+              _buildGameTypeChips('185', 2),
+              _buildGameTypeChips('200', 3),
+              _buildGameTypeChips('225', 4),
+              _buildGameTypeChips('230', 5),
             ],
           ),
         ],
@@ -392,7 +432,9 @@ class _NewGamePage extends State<NewGamePage> {
       color: Theme.of(context).cardColor,
       child: Column(
         children: <Widget>[
-          _buildCardHeaders(''),
+          _buildCardHeaders(S
+              .of(context)
+              .deleteFormDefaultValues),
           MyButton(
             S.of(context).clearMemory,
             Icons.delete,
@@ -403,6 +445,31 @@ class _NewGamePage extends State<NewGamePage> {
             iconColor: Colors.white,
             splashColor: Colors.white,
             width: 170.0,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildGetPointsAfter1100() {
+    return Card(
+      child: Column(
+        children: <Widget>[
+          _buildCardHeaders(S
+              .of(context)
+              .getPointsAfter1100),
+          Wrap(
+            crossAxisAlignment: WrapCrossAlignment.center,
+            alignment: WrapAlignment.center,
+            spacing: 10.0,
+            children: <Widget>[
+              _buildGetPointsChips(S
+                  .of(context)
+                  .write, 1),
+              _buildGetPointsChips(S
+                  .of(context)
+                  .doNotWrite, 2),
+            ],
           ),
         ],
       ),
@@ -430,6 +497,7 @@ class _NewGamePage extends State<NewGamePage> {
                       _buildCardTeam2Names(),
                       _buildCardDouble(),
                       _buildCardGameType(),
+                      _buildGetPointsAfter1100(),
                       _buildCardInitPoints(),
                       _buildCardResetButtons(context),
                     ],
@@ -567,7 +635,7 @@ class _NewGamePage extends State<NewGamePage> {
 
     _loadSharedPreferences();
 
-    switch (_gameTypeValue) {
+    switch (_gameTypeChipValue) {
       case 1:
         _gameType = '165';
         break;
@@ -579,6 +647,15 @@ class _NewGamePage extends State<NewGamePage> {
         break;
       case 4:
         _gameType = '230';
+        break;
+    }
+
+    switch (_getPointsChipValue) {
+      case 1:
+        _getAfter = true;
+        break;
+      case 2:
+        _getAfter = false;
         break;
     }
   }
@@ -663,6 +740,7 @@ class _NewGamePage extends State<NewGamePage> {
         'dNeg': _doubleNegValue == 1 ? true : false,
         't1InitPoints': t1InitPoints,
         't2InitPoints': t2InitPoints,
+        'getPointsAfter': _getAfter,
       };
 
       Navigator.push(
