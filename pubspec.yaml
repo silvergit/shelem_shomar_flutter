@@ -11,7 +11,7 @@ description: A Shelem counter app.
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.0.1+1
+version: 1.1.0+1
 
 environment:
   sdk: ">=2.1.0 <3.0.0"
@@ -67,6 +67,9 @@ flutter:
     - assets/images/person-icon.jpg
     - assets/icon.png
     - assets/images/camera_black.png
+    - assets/images/one.png
+    - assets/images/two.png
+    - assets/images/three.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 

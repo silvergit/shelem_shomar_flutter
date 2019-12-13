@@ -139,17 +139,34 @@ class _ChartListView extends State<ChartListView> {
 
   _buildBody(int index) {
     myLocale = Localizations.localeOf(context);
+    bool portraitOrientation =
+        MediaQuery
+            .of(context)
+            .orientation == Orientation.portrait;
+    double width = MediaQuery
+        .of(context)
+        .size
+        .width;
+
+    Widget _child;
     switch (widget.listTypeIndex) {
       case 0:
-        return _linearColorType(index, myLocale.languageCode);
+        _child = _linearColorType(index, myLocale.languageCode);
         break;
       case 1:
-        return _gradientColorType(index, myLocale.languageCode);
+        _child = _gradientColorType(index, myLocale.languageCode);
         break;
       case 2:
-        return _simpleType(index, myLocale.languageCode);
+        _child = _simpleType(index, myLocale.languageCode);
         break;
     }
+
+    return Container(
+      margin: portraitOrientation ? null : EdgeInsets.only(top: 8.0),
+      color: Colors.blue,
+      width: portraitOrientation ? width : width / 3 * 2,
+      child: _child,
+    );
   }
 
   Widget _gradientColorType(int index, String languageCode) {

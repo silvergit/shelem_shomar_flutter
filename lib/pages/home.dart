@@ -16,8 +16,6 @@ class HomePage extends StatelessWidget {
 
   _buildCard({Config config, Color backgroundColor = Colors.transparent}) {
     return Container(
-      height: 200.0,
-      width: double.infinity,
       child: Card(
         elevation: 12.0,
 //        margin: EdgeInsets.only(right: 16.0, left: 16.0, bottom: 16.0),
@@ -47,20 +45,43 @@ class HomePage extends StatelessWidget {
   ];
 
   Widget _buildTopCard(BuildContext context) {
+    bool portraitOrientation = MediaQuery
+        .of(context)
+        .orientation == Orientation.portrait;
+    double height = MediaQuery
+        .of(context)
+        .size
+        .height;
+    double width = MediaQuery
+        .of(context)
+        .size
+        .width;
+
     return Stack(
       alignment: AlignmentDirectional.centerStart,
       children: <Widget>[
-        _buildCard(
-          config: CustomConfig(
-            colors: [
-              Theme.of(context).canvasColor,
-              Theme.of(context).primaryColor,
-              Theme.of(context).cardColor,
-              Theme.of(context).accentColor,
-            ],
-            durations: [35000, 19440, 10800, 6000],
-            heightPercentages: [0.20, 0.23, 0.25, 0.30],
-            blur: _blurs[4],
+        Container(
+          height: portraitOrientation ? height / 4 : height / 1.5,
+          child: _buildCard(
+            config: CustomConfig(
+              colors: [
+                Theme
+                    .of(context)
+                    .canvasColor,
+                Theme
+                    .of(context)
+                    .primaryColor,
+                Theme
+                    .of(context)
+                    .cardColor,
+                Theme
+                    .of(context)
+                    .accentColor,
+              ],
+              durations: [35000, 19440, 10800, 6000],
+              heightPercentages: [0.20, 0.23, 0.25, 0.30],
+              blur: _blurs[4],
+            ),
           ),
         ),
         Positioned(
@@ -68,8 +89,8 @@ class HomePage extends StatelessWidget {
           left: 10.0,
           child: Image.asset(
             'assets/icon.png',
-            width: 200.0,
-            height: 200.0,
+            width: portraitOrientation ? height / 4 : width / 4,
+            height: portraitOrientation ? height / 4 : width / 4,
             color: null,
           ),
         ),
@@ -96,7 +117,12 @@ class HomePage extends StatelessWidget {
       icon,
       () => Navigator.pushNamed(context, routeName),
       fontSize: 24.0,
-      height: 60.0,
+      height: MediaQuery
+          .of(context)
+          .orientation == Orientation.portrait ? 60.0 : (MediaQuery
+          .of(context)
+          .size
+          .height - 20) / 6,
       margin: 0.0,
       iconBackColor: Theme.of(context).accentColor,
       iconSize: 34.0,
@@ -109,7 +135,12 @@ class HomePage extends StatelessWidget {
 
   Widget _buildGameButtons(BuildContext context) {
     final double deviceWidth = MediaQuery.of(context).size.width;
-    final double targetWidth = deviceWidth > 550 ? 500.0 : deviceWidth * 0.9;
+    bool portraitOrientation =
+        MediaQuery
+            .of(context)
+            .orientation == Orientation.portrait;
+    final double targetWidth =
+    portraitOrientation ? deviceWidth * 0.9 : (deviceWidth / 2) * 0.9;
 
     return Container(
       margin: EdgeInsets.all(10.0),
@@ -120,13 +151,13 @@ class HomePage extends StatelessWidget {
             children: <Widget>[
               _buildButtons(context, S.of(context).newGame, '/newGame',
                   Icons.videogame_asset),
-              _getSomeSpace(0, 20.0),
+              _getSomeSpace(0, portraitOrientation ? 20.0 : 4.0),
               _buildButtons(
                   context, S.of(context).gamesList, '/gamesList', Icons.list),
-              _getSomeSpace(0, 20.0),
+              _getSomeSpace(0, portraitOrientation ? 20.0 : 4.0),
               _buildButtons(context, S.of(context).managePlayers,
                   '/managePlayers', Icons.person),
-              _getSomeSpace(0, 20.0),
+              _getSomeSpace(0, portraitOrientation ? 20.0 : 4.0),
               _buildButtons(
                   context, S.of(context).topPlayers, '/topPlayers', Icons.cake),
             ],
@@ -144,16 +175,50 @@ class HomePage extends StatelessWidget {
         title: Text(S.of(context).shelemShomar),
       ),
       drawer: SideDrawer(),
-      body: Center(
-        child: SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
-              _buildTopCard(context),
-              _getSomeSpace(0.0, 15.0),
-              _buildGameButtons(context),
-            ],
-          ),
-        ),
+      body: MediaQuery
+          .of(context)
+          .orientation == Orientation.portrait
+          ?
+//      Column(
+//              children: <Widget>[
+//                _buildTopCard(context),
+//                Center(
+//                  child: SingleChildScrollView(
+//                    scrollDirection: Axis.vertical,
+//                    child: Column(
+//                      children: <Widget>[
+//                        _getSomeSpace(0.0, 15.0),
+//                        _buildGameButtons(context),
+//                      ],
+//                    ),
+//                  ),
+//                )
+//              ],
+//            )
+      Column(children: <Widget>[_buildTopCard(context),
+        Expanded(
+            child: ListView(children: <Widget>[_buildGameButtons(context)],))
+      ],)
+          : Row(
+        children: <Widget>[
+          Container(
+              width: MediaQuery
+                  .of(context)
+                  .size
+                  .width / 2,
+              height: double.infinity,
+              child: SingleChildScrollView(
+                  scrollDirection: Axis.vertical,
+                  child: _buildGameButtons(context))),
+          Container(
+              width: MediaQuery
+                  .of(context)
+                  .size
+                  .width / 2 - 10,
+              child: SingleChildScrollView(
+                  scrollDirection: Axis.vertical,
+                  child: _buildTopCard(context))),
+        ],
       ),
     );
   }

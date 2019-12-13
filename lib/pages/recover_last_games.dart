@@ -3,9 +3,10 @@ import 'dart:core';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shelem_shomar/ListView/chart_listview_last_games.dart';
-import 'package:shelem_shomar/Widgets/bottom-bar-newgame.dart';
+import 'package:shelem_shomar/Widgets/bottom-bar-ingame.dart';
 import 'package:shelem_shomar/Widgets/custom_circle_avatar.dart';
 import 'package:shelem_shomar/Widgets/side_drawer.dart';
+import 'package:shelem_shomar/Widgets/text-with-locale-support.dart';
 import 'package:shelem_shomar/generated/i18n.dart';
 import 'package:shelem_shomar/helpers/dbhelper.dart';
 import 'package:shelem_shomar/models/game_table.dart';
@@ -14,8 +15,10 @@ import 'package:shelem_shomar/models/points_table.dart';
 
 class RecoverLastGames extends StatefulWidget {
   final GameTable game;
+  final int team1Points;
+  final int team2Points;
 
-  RecoverLastGames(this.game);
+  RecoverLastGames(this.game, this.team1Points, this.team2Points);
 
   @override
   State<StatefulWidget> createState() {
@@ -25,10 +28,6 @@ class RecoverLastGames extends StatefulWidget {
 
 class _RecoverLastGamesState extends State<RecoverLastGames> {
   List<PlayerTable> players = [];
-
-  SizedBox _verticalGap = SizedBox(
-    width: 10.0,
-  );
 
   int _listTypeIndex;
 
@@ -209,8 +208,7 @@ class _RecoverLastGamesState extends State<RecoverLastGames> {
 //          _buildBottomResultsBar(),
         ],
       ),
-//      bottomNavigationBar: _buildGameButton(),
-      bottomNavigationBar: BottomBarNewGame(),
+      bottomNavigationBar: BottomBarInGame(_buildBottomResultsBar()),
       floatingActionButton: FloatingActionButton(
           onPressed: () => Navigator.pop(context),
           backgroundColor: Color(0xFFF17532),
@@ -218,6 +216,92 @@ class _RecoverLastGamesState extends State<RecoverLastGames> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
+
+  Widget _buildBottomResultsBar() {
+    String languageCode = Localizations
+        .localeOf(context)
+        .languageCode;
+    return Container(
+      padding: EdgeInsets.all(0.0),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 24.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            TextWithLocale(
+              widget.team1Points.toString(), languageCode, fontSize: 22.0,
+              fontColor: Theme
+                  .of(context)
+                  .textTheme
+                  .body1
+                  .color,),
+            TextWithLocale(
+              widget.team2Points.toString(), languageCode, fontSize: 22.0,)
+          ],
+        ),
+      ),
+    );
+  }
+
+//  Widget _buildBottomResultsBar(String languageCode) {
+//    return Container(
+//      padding: EdgeInsets.all(10.0),
+//      child: Row(
+//        children: <Widget>[
+//          CustomCircleAvatar(
+//            _t1p1.avatar,
+//            radius: 20.0,
+//            iconSize: 25.0,
+//          ),
+//          SizedBox(
+//            width: 10.0,
+//          ),
+//          CustomCircleAvatar(
+//            _t1p2.avatar,
+//            radius: 20.0,
+//            iconSize: 25.0,
+//          ),
+//          SizedBox(
+//            width: 10.0,
+//          ),
+//          Expanded(
+//            child: TextWithLocale(
+//              _team1PointsResult,
+//              languageCode,
+//              textAlignEn: TextAlign.start,
+//              textAlignFa: TextAlign.end,
+//              fontSize: 20.0,
+//            ),
+//          ),
+//          Expanded(
+//            child: TextWithLocale(
+//              _team2PointsResult,
+//              languageCode,
+//              textAlignEn: TextAlign.end,
+//              textAlignFa: TextAlign.start,
+//              fontSize: 20.0,
+//            ),
+//          ),
+//          SizedBox(
+//            width: 10.0,
+//          ),
+//          CustomCircleAvatar(
+//            _t2p1.avatar,
+//            radius: 20.0,
+//            iconSize: 25.0,
+//          ),
+//          SizedBox(
+//            width: 10.0,
+//          ),
+//          CustomCircleAvatar(
+//            _t2p2.avatar,
+//            radius: 20.0,
+//            iconSize: 25.0,
+//          ),
+//        ],
+//      ),
+//    );
+//  }
 }
 
 class Merged {

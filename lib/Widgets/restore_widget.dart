@@ -165,31 +165,45 @@ class _RestoreWidgetState extends State<RestoreWidget> {
         .localeOf(context)
         .languageCode;
 
-    return Column(
-      children: <Widget>[
-        Card(
-          child: Container(
-            width: double.infinity,
-            padding: EdgeInsets.all(8.0),
-            margin: EdgeInsets.all(8.0),
-            child: Column(
-              children: <Widget>[
-                Text(
-                  S.of(context).pleaseSelectBackupToRestoreIt,
-                  style: Theme.of(context).textTheme.body2,
-                ),
-                Text(S
-                    .of(context)
-                    .afterRestoringAllPreviousDataFromTheProgramWillBeReplaced),
-              ],
+    return OrientationBuilder(
+      builder: (context, orientation) {
+        return orientation == Orientation.portrait
+            ? Column(
+          children: <Widget>[
+            _buildTopCard(context),
+            SizedBox(
+              height: 20.0,
             ),
-          ),
-        ),
-        SizedBox(
-          height: 20.0,
-        ),
-        backupFiles.length == 0
-            ? Expanded(
+            _buildListView(context, languageCode),
+            SizedBox(
+              height: 20.0,
+            ),
+            _buildBottomCard(context),
+          ],
+        )
+            : Row(
+          children: <Widget>[
+            SingleChildScrollView(
+              child: Column(
+                children: <Widget>[
+                  _buildTopCard(context),
+                  SizedBox(
+                    height: 2.0,
+                  ),
+                  _buildBottomCard(context),
+                ],
+              ),
+            ),
+            _buildListView(context, languageCode),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildListView(BuildContext context, String languageCode) {
+    return backupFiles.length == 0
+        ? Expanded(
             child: Center(
               child: Center(
                 child: Text(
@@ -203,91 +217,167 @@ class _RestoreWidgetState extends State<RestoreWidget> {
                 ),
               ),
             ))
-            : Expanded(
-          child: ListView.builder(
-            itemCount: backupFiles.length,
-            itemBuilder: (BuildContext context, int index) {
-              return Column(
-                children: <Widget>[
-                  ListTile(
-                    title: SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: TextWithLocale(
-                            basename(backupFiles[index]), 'en')),
-                    subtitle: Column(
-                      children: <Widget>[
-                        TextWithLocale(S
+        : Expanded(
+      child: ListView.builder(
+        itemCount: backupFiles.length,
+        itemBuilder: (BuildContext context, int index) {
+          return Column(
+            children: <Widget>[
+              ListTile(
+                title: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: TextWithLocale(
+                        basename(backupFiles[index]), 'en')),
+                subtitle: Column(
+                  children: <Widget>[
+                    TextWithLocale(
+                        S
                             .of(context)
                             .size +
                             ': ' +
                             _getBackupFileSize(backupFiles[index]),
-                            languageCode),
-                        TextWithLocale(S
+                        languageCode),
+                    TextWithLocale(
+                        S
                             .of(context)
                             .created +
                             ': ' +
                             _getBackupLastModified(backupFiles[index]),
-                            languageCode),
-                      ],
-                    ),
-                    trailing: Container(
-                      width: 100.0,
-                      child: Row(
-                        children: <Widget>[
-                          IconButton(
-                            icon: Icon(
-                              Icons.share,
-                              color: Colors.green,
-                            ),
-                            onPressed: () {
-                              _shareBackupFile(backupFiles[index]);
-                            },
-                          ),
-                          IconButton(
-                            icon: Icon(
-                              Icons.delete,
-                              color: Colors.red,
-                            ),
-                            onPressed: () {
-                              _deleteBackupFile(context, index);
-                            },
-                          ),
-                        ],
+                        languageCode),
+                  ],
+                ),
+                trailing: Container(
+                  width: 100.0,
+                  child: Row(
+                    children: <Widget>[
+                      IconButton(
+                        icon: Icon(
+                          Icons.share,
+                          color: Colors.green,
+                        ),
+                        onPressed: () {
+                          _shareBackupFile(backupFiles[index]);
+                        },
                       ),
-                    ),
-                    onTap: () =>
-                        _copyDataBaseToBackupFolder(
-                            context, backupFiles[index]),
+                      IconButton(
+                        icon: Icon(
+                          Icons.delete,
+                          color: Colors.red,
+                        ),
+                        onPressed: () {
+                          _deleteBackupFile(context, index);
+                        },
+                      ),
+                    ],
                   ),
-                  Divider(),
-                ],
-              );
-            },
-          ),
-        ),
-        SizedBox(
-          height: 20.0,
-        ),
-        Card(
-          child: Container(
-            width: double.infinity,
-            padding: EdgeInsets.all(8.0),
-            margin: EdgeInsets.all(8.0),
-            child: Column(
-              children: <Widget>[
-                Text(
-                  S.of(context).orSelectFromPhoneMemory,
-                  style: Theme.of(context).textTheme.body2,
                 ),
-                OutlineButton(
-                  child: Text(S.of(context).selectBackupFile),
-                  onPressed: () => _selectBackUpFromInternalMemory(context),
-                ),
-              ],
+                onTap: () =>
+                    _copyDataBaseToBackupFolder(
+                        context, backupFiles[index]),
+              ),
+              Divider(),
+            ],
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildBottomCard(BuildContext context) {
+    bool portrait = MediaQuery
+        .of(context)
+        .orientation == Orientation.portrait;
+    double width = MediaQuery
+        .of(context)
+        .size
+        .width;
+
+    return Card(
+      child: Container(
+        width: portrait ? double.infinity : width / 2 - 30,
+        padding: EdgeInsets.all(8.0),
+        margin: EdgeInsets.all(8.0),
+        child: Column(
+          children: <Widget>[
+            Text(
+              S
+                  .of(context)
+                  .orSelectFromPhoneMemory,
+              style: Theme
+                  .of(context)
+                  .textTheme
+                  .body2,
             ),
-          ),
+            OutlineButton(
+              child: Text(S
+                  .of(context)
+                  .selectBackupFile),
+              onPressed: () => _selectBackUpFromInternalMemory(context),
+            ),
+          ],
         ),
-      ],
+      ),
+    );
+  }
+
+  Widget _buildTopCard(BuildContext context) {
+    bool portrait = MediaQuery
+        .of(context)
+        .orientation == Orientation.portrait;
+    double width = MediaQuery
+        .of(context)
+        .size
+        .width;
+
+    return Card(
+      child: Container(
+          width: portrait ? double.infinity : width / 2 - 30,
+          padding: EdgeInsets.all(8.0),
+          margin: EdgeInsets.all(8.0),
+          child: portrait
+              ? Column(
+            children: <Widget>[
+              Text(
+                S
+                    .of(context)
+                    .pleaseSelectBackupToRestoreIt,
+                style: Theme
+                    .of(context)
+                    .textTheme
+                    .body2,
+              ),
+              Text(S
+                  .of(context)
+                  .afterRestoringAllPreviousDataFromTheProgramWillBeReplaced)
+            ],
+          )
+              : Row(
+            children: <Widget>[
+              Expanded(
+                child: Text(
+                  S
+                      .of(context)
+                      .pleaseSelectBackupToRestoreIt,
+                  style: Theme
+                      .of(context)
+                      .textTheme
+                      .body2,
+                ),
+              ),
+              Container(
+                width: 40.0,
+                child: Tooltip(
+                  message: S
+                      .of(context)
+                      .afterRestoringAllPreviousDataFromTheProgramWillBeReplaced,
+                  child: IconButton(
+                    icon: Icon(Icons.help),
+                    onPressed: () {},
+                  ),
+                ),
+              ),
+            ],
+          )),
     );
   }
 }

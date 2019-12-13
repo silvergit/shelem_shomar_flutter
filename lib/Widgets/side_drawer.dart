@@ -172,7 +172,6 @@ class _SideDrawerState extends State<SideDrawer> {
       leading: Icon(Icons.backup),
       children: <Widget>[
         ListTile(
-          leading: Icon(Icons.backup),
           title: Text(S.of(context).backup),
           onTap: () {
             Navigator.of(context).pop();
@@ -181,7 +180,6 @@ class _SideDrawerState extends State<SideDrawer> {
           },
         ),
         ListTile(
-          leading: Icon(Icons.restore),
           title: Text(S.of(context).restore),
           onTap: () {
             Navigator.of(context).pop();

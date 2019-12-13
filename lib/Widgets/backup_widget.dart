@@ -101,56 +101,131 @@ class _BackupWidgetState extends State<BackupWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Card(
-          color: Theme.of(context).cardColor,
-          child: Container(
-            width: double.infinity,
-            padding: EdgeInsets.all(8.0),
-            margin: EdgeInsets.all(8.0),
-            child: Column(
-              children: <Widget>[
-                Text(
-                  S.of(context).backupAllDataToMemory,
-                  style: Theme.of(context).textTheme.body2,
-                ),
-                Text(S.of(context).youCanExportBackupsToAnotherPhoneAndUseIt),
-                SizedBox(
-                  height: 15.0,
-                ),
-                OutlineButton(
-                  child: Text(S.of(context).backupNow),
-                  onPressed: () {
-                    copyDataBaseToBackupFolder(context);
-                  },
-                )
-              ],
-            ),
-          ),
-        ),
-        Card(
-          color: Theme.of(context).cardColor,
-          child: Container(
-            width: double.infinity,
-            padding: EdgeInsets.all(8.0),
-            margin: EdgeInsets.all(8.0),
-            child: Column(
-              children: <Widget>[
-                Text(
-                  S.of(context).resetDataBase,
-                  style: Theme.of(context).textTheme.body2,
-                ),
-                Text(S.of(context).resetDataBaseMessageInfo),
-                OutlineButton(
-                  onPressed: () => _restoreDatabase(context),
-                  child: Text(S.of(context).resetDataBase),
-                ),
-              ],
-            ),
-          ),
+    return OrientationBuilder(
+      builder: (context, orientation) {
+        return orientation == Orientation.portrait
+            ? Column(
+          children: <Widget>[
+            _buildBackupCard(context),
+            _buildRemoveDbCard(context)
+          ],
         )
-      ],
+            : Row(
+          children: <Widget>[
+            _buildBackupCard(context),
+            _buildRemoveDbCard(context)
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildRemoveDbCard(BuildContext context) {
+    bool portrait = MediaQuery
+        .of(context)
+        .orientation == Orientation.portrait;
+    double width = MediaQuery
+        .of(context)
+        .size
+        .width;
+
+    return Card(
+      color: Theme
+          .of(context)
+          .cardColor,
+      child: Container(
+        width: portrait ? double.infinity : width / 2 - 25,
+        padding: EdgeInsets.all(8.0),
+        margin: EdgeInsets.all(8.0),
+        child: Column(
+          children: <Widget>[
+            Text(
+              S
+                  .of(context)
+                  .resetDataBase,
+              style: Theme
+                  .of(context)
+                  .textTheme
+                  .body2,
+            ),
+            portrait
+                ? Text(S
+                .of(context)
+                .resetDataBaseMessageInfo)
+                : Expanded(
+              child: SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                child: Text(S
+                    .of(context)
+                    .resetDataBaseMessageInfo),
+              ),
+            ),
+            OutlineButton(
+              onPressed: () => _restoreDatabase(context),
+              child: Text(S
+                  .of(context)
+                  .resetDataBase),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildBackupCard(BuildContext context) {
+    bool portrait = MediaQuery
+        .of(context)
+        .orientation == Orientation.portrait;
+    double width = MediaQuery
+        .of(context)
+        .size
+        .width;
+
+    return Card(
+      color: Theme
+          .of(context)
+          .cardColor,
+      child: Container(
+        width: portrait ? double.infinity : width / 2 - 25,
+        padding: EdgeInsets.all(8.0),
+        margin: EdgeInsets.all(8.0),
+        child: Column(
+          children: <Widget>[
+            Text(
+              S
+                  .of(context)
+                  .backupAllDataToMemory,
+              style: Theme
+                  .of(context)
+                  .textTheme
+                  .body2,
+            ),
+            portrait
+                ? Text(S
+                .of(context)
+                .youCanExportBackupsToAnotherPhoneAndUseIt)
+                : Expanded(
+              child: SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                child: Text(S
+                    .of(context)
+                    .youCanExportBackupsToAnotherPhoneAndUseIt),
+              ),
+            ),
+            SizedBox(
+              height: 15.0,
+            ),
+            OutlineButton(
+              child: Text(S
+                  .of(context)
+                  .backupNow),
+              onPressed: () {
+                copyDataBaseToBackupFolder(context);
+              },
+            )
+          ],
+        ),
+      ),
     );
   }
 }

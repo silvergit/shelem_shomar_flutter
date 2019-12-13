@@ -107,7 +107,10 @@ class _GamesListView extends State<GamesListListView> {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => RecoverLastGames(widget.games[index]),
+                  builder: (context) =>
+                      RecoverLastGames(
+                          widget.games[index], widget.games[index].team1Points,
+                          widget.games[index].team2Points),
                 ));
           },
           child: Card(

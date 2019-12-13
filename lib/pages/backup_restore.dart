@@ -48,11 +48,11 @@ class _BackupRestoreState extends State<BackupRestore> {
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
+            icon: Icon(Icons.backup),
             title: Text('Backup'),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.business),
+            icon: Icon(Icons.restore),
             title: Text('Restore'),
           ),
         ],

@@ -32,7 +32,7 @@ class _AddPersonState extends State<AddPerson> {
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
+    return new Scaffold(resizeToAvoidBottomPadding: false,
       body: new Builder(
         builder: (BuildContext context) {
           return new Stack(

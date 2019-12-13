@@ -63,6 +63,11 @@ class _AboutPageState extends State<AboutPage> {
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery
+        .of(context)
+        .size
+        .width;
+
     return Scaffold(
       appBar: AppBar(
         title: Text(S.of(context).aboutShelemShomar),
@@ -75,13 +80,15 @@ class _AboutPageState extends State<AboutPage> {
               _buildBackground(context),
               Center(
                 child: new Container(
+                  width: width,
                   padding: EdgeInsets.only(
                     top: 10.0,
                     bottom: 10.0,
                     left: 16,
                     right: 16,
                   ),
-                  margin: EdgeInsets.symmetric(horizontal: 50.0),
+                  margin: EdgeInsets.symmetric(
+                      horizontal: 50.0, vertical: 20.0),
                   decoration: new BoxDecoration(
                     color: Colors.white,
                     shape: BoxShape.rectangle,
@@ -94,75 +101,153 @@ class _AboutPageState extends State<AboutPage> {
                       ),
                     ],
                   ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min, // To make the card compact
-                    children: <Widget>[
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Image.asset(
-                            'assets/icon.png',
-                            height: 48.0,
-                            width: 48.0,
-                          ),
-                          Text(
-                            S.of(context).shelemShomar,
-                            style: TextStyle(fontSize: 24.0),
-                          ),
-                        ],
-                      ),
-                      Text('${S.of(context).version} : $_projectVersion'),
-                      SizedBox(
-                        height: 20.0,
-                      ),
-                      Text(
-                        S.of(context).morfaceSoft,
-                        style: TextStyle(fontSize: 18.0),
-                      ),
-                      SizedBox(
-                        height: 30.0,
-                      ),
-                      Text(S.of(context).aCounterAppForShelemGame),
-                      SizedBox(
-                        height: 20.0,
-                      ),
-                      Text(
-                          '${S.of(context).developer}:\n${S.of(context).alirezaPazhouhesh}'),
-                      SizedBox(
-                        height: 30.0,
-                      ),
-                      Text(S.of(context).contactUs),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          IconButton(
-                            icon: Icon(Icons.call),
-                            onPressed: () => setState(() {
-                              _launched = _urlLauncher(_phone);
-                            }),
-                          ),
-                          IconButton(
-                            icon: Icon(Icons.message),
-                            onPressed: () => setState(() {
-                              _launched = _urlLauncher(_message);
-                            }),
-                          ),
-                          IconButton(
-                            icon: Icon(Icons.mail),
-                            onPressed: () => setState(() {
-                              _launched = _urlLauncher(_mailAddress);
-                            }),
-                          )
-                        ],
-                      ),
-                    ],
-                  ),
+                  child: _buildContent(context),
                 ),
               ),
             ],
           );
         },
       ),
+    );
+  }
+
+  _buildContent(BuildContext context) {
+    bool portrait = MediaQuery
+        .of(context)
+        .orientation == Orientation.portrait;
+
+    Text _appName = Text(
+      S
+          .of(context)
+          .shelemShomar,
+      style: TextStyle(fontSize: 24.0),
+    );
+
+    Text _version = Text('${S
+        .of(context)
+        .version} : $_projectVersion');
+
+    Text _morfaceSoft = Text(
+      S
+          .of(context)
+          .morfaceSoft,
+      style: TextStyle(fontSize: 18.0),
+    );
+
+    Text _description = Text(S
+        .of(context)
+        .aCounterAppForShelemGame);
+
+    Text _developer =
+    Text('${S
+        .of(context)
+        .developer}:\n${S
+        .of(context)
+        .alirezaPazhouhesh}');
+    Column _contact = Column(
+      children: <Widget>[
+        Text(S
+            .of(context)
+            .contactUs),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            IconButton(
+              icon: Icon(Icons.call),
+              onPressed: () =>
+                  setState(() {
+                    _launched = _urlLauncher(_phone);
+                  }),
+            ),
+            IconButton(
+              icon: Icon(Icons.message),
+              onPressed: () =>
+                  setState(() {
+                    _launched = _urlLauncher(_message);
+                  }),
+            ),
+            IconButton(
+              icon: Icon(Icons.mail),
+              onPressed: () =>
+                  setState(() {
+                    _launched = _urlLauncher(_mailAddress);
+                  }),
+            )
+          ],
+        ),
+      ],
+    );
+
+    SizedBox _spaceH20 = SizedBox(
+      height: 20.0,
+    );
+
+    SizedBox _spaceH30 = SizedBox(
+      height: 30.0,
+    );
+
+    return portrait
+        ? Column(
+      mainAxisSize: MainAxisSize.min, // To make the card compact
+      children: <Widget>[
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Image.asset(
+              'assets/icon.png',
+              height: 48.0,
+              width: 48.0,
+                  ),
+            _appName,
+          ],
+        ),
+        _version,
+        _spaceH20,
+        _morfaceSoft,
+        _spaceH30,
+        _description,
+        _spaceH20,
+        _developer,
+        _spaceH30,
+        _contact,
+      ],
+    )
+        : Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      mainAxisSize: MainAxisSize.min, // To make the card compact
+      children: <Widget>[
+        Column(
+          children: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Image.asset(
+                  'assets/icon.png',
+                  height: portrait ? 48.0 : 96.0,
+                  width: portrait ? 48.0 : 96.0,
+                ),
+                Column(
+                  children: <Widget>[
+                    _appName,
+                    _version,
+                  ],
+                ),
+              ],
+            ),
+            _spaceH20,
+            _morfaceSoft,
+            _description,
+          ],
+        ),
+        Column(
+          children: <Widget>[
+
+            _spaceH20,
+            _developer,
+            _spaceH30,
+            _contact,
+          ],
+        ),
+      ],
     );
   }
 }

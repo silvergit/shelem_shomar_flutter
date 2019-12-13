@@ -161,9 +161,11 @@ class _InGamePage extends State<InGamePage> {
 
     for (Item item in listItems) {
       if (teamNumber == 1) {
-        sum += int.parse(item.team1HandPoints);
+        var t1 = int.tryParse(item.team1HandPoints);
+        t1 == null ? sum += 0 : sum += t1;
       } else if (teamNumber == 2) {
-        sum += int.parse(item.team2HandPoints);
+        var t2 = int.tryParse(item.team2HandPoints);
+        t2 == null ? sum += 0 : sum += t2;
       }
     }
 
@@ -400,16 +402,34 @@ class _InGamePage extends State<InGamePage> {
 
   //WIDGETS
   Widget _buildHeader(String languageCode) {
+    bool portraitOrientation =
+        MediaQuery
+            .of(context)
+            .orientation == Orientation.portrait;
+    double width = MediaQuery
+        .of(context)
+        .size
+        .width;
+
     return Container(
+      width: portraitOrientation ? width : width / 3,
+      height: portraitOrientation ? null : MediaQuery
+          .of(context)
+          .size
+          .height - 80,
       padding: EdgeInsets.all(10.0),
       color: Theme.of(context).accentColor,
-      margin: EdgeInsets.only(bottom: 10.0),
-      child: Row(children: <Widget>[
+      margin: portraitOrientation ? EdgeInsets.only(bottom: 10.0) : EdgeInsets
+          .all(0.0),
+      child: portraitOrientation
+          ? Row(children: <Widget>[
         Expanded(
           child: Row(
             children: <Widget>[
               Text(
-                '${S.of(context).finalPoints}: ',
+                '${S
+                    .of(context)
+                    .finalPoints}: ',
                 style: TextStyle(fontSize: 20.0),
               ),
               TextWithLocale(
@@ -432,6 +452,99 @@ class _InGamePage extends State<InGamePage> {
           _date,
           languageCode,
           fontSize: 16.0,
+        ),
+      ])
+          : Column(children: <Widget>[
+        Row(
+          children: <Widget>[
+            Text(
+              '${S
+                  .of(context)
+                  .finalPoints}: ',
+              style: TextStyle(fontSize: 20.0),
+            ),
+            TextWithLocale(
+              _getGoalPoint().toString(),
+              languageCode,
+              fontSize: 16.0,
+            )
+          ],
+        ),
+        TextWithLocale(
+          _time,
+          languageCode,
+          fontSize: 16.0,
+        ),
+        SizedBox(
+          width: 16.0,
+        ),
+        TextWithLocale(
+          _date,
+          languageCode,
+          fontSize: 16.0,
+        ),
+        Container(
+          padding: EdgeInsets.all(10.0),
+          child: Column(
+            children: <Widget>[
+              Row(
+                children: <Widget>[
+                  Expanded(
+                    child: TextWithLocale(
+                      _team1PointsResult,
+                      languageCode,
+                      textAlignEn: TextAlign.start,
+                      textAlignFa: TextAlign.end,
+                      fontSize: 20.0,
+                    ),
+                  ),
+                  CustomCircleAvatar(
+                    _t1p1.avatar,
+                    radius: 20.0,
+                    iconSize: 25.0,
+                  ),
+                  SizedBox(
+                    width: 12.0,
+                  ),
+                  CustomCircleAvatar(
+                    _t1p2.avatar,
+                    radius: 20.0,
+                    iconSize: 25.0,
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 12.0,
+              ),
+              Row(
+                children: <Widget>[
+                  Expanded(
+                    child: TextWithLocale(
+                      _team2PointsResult,
+                      languageCode,
+                      textAlignEn: TextAlign.start,
+                      textAlignFa: TextAlign.end,
+                      fontSize: 20.0,
+                    ),
+                  ),
+                  CustomCircleAvatar(
+                    _t2p1.avatar,
+                    radius: 20.0,
+                    iconSize: 25.0,
+                  ),
+                  SizedBox(
+                    width: 12.0,
+                  ),
+                  CustomCircleAvatar(
+                    _t2p2.avatar,
+                    radius: 20.0,
+                    iconSize: 25.0,
+                  ),
+                ],
+              ),
+              _createStartButtonIcon(),
+            ],
+          ),
         ),
       ]),
     );
@@ -802,9 +915,15 @@ class _InGamePage extends State<InGamePage> {
   //BUILD
   @override
   Widget build(BuildContext context) {
+    bool portraitOrientation =
+        MediaQuery
+            .of(context)
+            .orientation == Orientation.portrait;
+
     String languageCode = Localizations
         .localeOf(context)
         .languageCode;
+
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
@@ -819,7 +938,27 @@ class _InGamePage extends State<InGamePage> {
           ],
         ),
         drawer: SideDrawer(),
-        body: Column(
+        body: portraitOrientation
+            ? Column(
+          children: <Widget>[
+            _buildHeader(languageCode),
+            Expanded(
+              child: ChartListView(
+                listItems,
+                _t1p1,
+                _t1p2,
+                _t2p1,
+                _t2p2,
+                _setBtnStartState,
+                _updateTextViewResults,
+                _changeButtonOpenCloseText,
+                _changeButtonText,
+                _listTypeIndex,
+              ),
+            ),
+          ],
+        )
+            : Row(
           children: <Widget>[
             _buildHeader(languageCode),
             Expanded(
@@ -838,9 +977,11 @@ class _InGamePage extends State<InGamePage> {
             ),
           ],
         ),
-        bottomNavigationBar:
-        BottomBarInGame(_buildBottomResultsBar(languageCode)),
-        floatingActionButton: FloatingActionButton(
+        bottomNavigationBar: portraitOrientation
+            ? BottomBarInGame(_buildBottomResultsBar(languageCode))
+            : null,
+        floatingActionButton: portraitOrientation
+            ? FloatingActionButton(
             onPressed: () {
               if (!btnGameState)
                 return null;
@@ -853,27 +994,54 @@ class _InGamePage extends State<InGamePage> {
               }
             },
             backgroundColor: Color(0xFFF17532),
-            child: _createStartButtonIcon()),
+            child: _createStartButtonIcon())
+            : null,
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       ),
     );
   }
 
   Widget _createStartButtonIcon() {
+    bool portraitOrientation =
+        MediaQuery
+            .of(context)
+            .orientation == Orientation.portrait;
+
     if (!btnGameState)
-      return IconButton(
+      return portraitOrientation
+          ? IconButton(
         icon: Icon(Icons.do_not_disturb_alt),
+        onPressed: null,
+      )
+          : RaisedButton(
+        child: Text(S
+            .of(context)
+            .gameOver),
         onPressed: null,
       );
     else {
       if (_changeButtonOpenCloseText)
-        return IconButton(
+        return portraitOrientation
+            ? IconButton(
           icon: Icon(Icons.play_arrow),
+          onPressed: _showOpenHandDialog,
+        )
+            : RaisedButton(
+          child: Text(S
+              .of(context)
+              .openHand),
           onPressed: _showOpenHandDialog,
         );
       else
-        return IconButton(
+        return portraitOrientation
+            ? IconButton(
           icon: Icon(Icons.stop),
+          onPressed: _showCloseHandDialog,
+        )
+            : RaisedButton(
+          child: Text(S
+              .of(context)
+              .closeHand),
           onPressed: _showCloseHandDialog,
         );
     }

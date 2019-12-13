@@ -95,8 +95,15 @@ class _NewGamePage extends State<NewGamePage> {
     }
 
     int gType = prefs.getInt('gameType') == null ? 1 : prefs.getInt('gameType');
-    int getType = prefs.getInt('getPointsAfter') == null ? 1 : prefs.getInt(
-        'getPointsAfter');
+
+    _setGameType(gType);
+
+    int getType = prefs.getInt('getPointsAfter') == null
+        ? 1
+        : prefs.getInt('getPointsAfter');
+
+    _setGetPointsAfter(getType);
+
     bool dPoz = prefs.getBool('dPoz') == null ? false : prefs.getBool('dPoz');
     bool dNeg = prefs.getBool('dNeg') == null ? false : prefs.getBool('dNeg');
 
@@ -155,10 +162,12 @@ class _NewGamePage extends State<NewGamePage> {
 
   Widget _buildHeaderTexts(String text) {
     return new TextWithLocale(
-      text, Localizations
-        .localeOf(context)
-        .languageCode,
-      fontSize: 18.0, fontColor: Colors.white,
+      text,
+      Localizations
+          .localeOf(context)
+          .languageCode,
+      fontSize: 18.0,
+      fontColor: Colors.white,
       textAlignEn: TextAlign.start,
       textAlignFa: TextAlign.end,
     );
@@ -166,10 +175,19 @@ class _NewGamePage extends State<NewGamePage> {
 
   double btnNamesWidth = 100.0;
 
-  Widget _buildCardHeaders(String text) {
+  Widget _buildCardHeaders(String text, {bool fullWidth = false}) {
+    bool portraitOrientation =
+        MediaQuery
+            .of(context)
+            .orientation == Orientation.portrait;
+    double width = MediaQuery
+        .of(context)
+        .size
+        .width;
+
     return Container(
       padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 8.0),
-      width: double.maxFinite,
+      width: portraitOrientation ? width : fullWidth ? width : width / 2 - 18,
       decoration: BoxDecoration(color: Theme.of(context).primaryColor),
       child: _buildHeaderTexts(
         text,
@@ -178,54 +196,86 @@ class _NewGamePage extends State<NewGamePage> {
   }
 
   Widget _buildCardTeam1Names() {
+    bool portraitOrientation =
+        MediaQuery
+            .of(context)
+            .orientation == Orientation.portrait;
+    double width = MediaQuery
+        .of(context)
+        .size
+        .width;
+
+    Container _firstInput = Container(
+      width: width / 2 - 30,
+      child: Row(
+        children: <Widget>[
+          _buildCircleAvatar(1, t1p1.avatar),
+          SizedBox(
+            width: 10.0,
+          ),
+          Flexible(
+            child: Text(
+              t1p1.name == null ? S
+                  .of(context)
+                  .first : t1p1.name,
+              softWrap: true,
+              maxLines: 5,
+              style: Theme
+                  .of(context)
+                  .textTheme
+                  .body1,
+            ),
+          ),
+        ],
+      ),
+    );
+
+    Container _secondInput = Container(
+      width: width / 2 - 30.0,
+      child: Row(
+        children: <Widget>[
+          _buildCircleAvatar(2, t1p2.avatar),
+          SizedBox(
+            width: 10.0,
+          ),
+          Flexible(
+            child: Text(t1p2.name == null ? S
+                .of(context)
+                .second : t1p2.name,
+                softWrap: true,
+                maxLines: 5,
+                style: Theme
+                    .of(context)
+                    .textTheme
+                    .body1),
+          ),
+        ],
+      ),
+    );
+
     return Card(
-      color: Theme.of(context).cardColor,
+      color: Theme
+          .of(context)
+          .cardColor,
       child: Column(
         children: <Widget>[
-          _buildCardHeaders(S.of(context).firstTeamPlayers),
+          _buildCardHeaders(S
+              .of(context)
+              .firstTeamPlayers),
           Container(
+            width: portraitOrientation ? width - 20 : width / 2 - 20,
             padding: EdgeInsets.all(6.0),
-            child: Row(
+            child: portraitOrientation
+                ? Row(
+              children: <Widget>[_firstInput, _secondInput],
+            )
+                : Column(
               children: <Widget>[
-                Container(
-                  width: MediaQuery.of(context).size.width / 2 - 20.0,
-                  child: Row(
-                    children: <Widget>[
-                      _buildCircleAvatar(1, t1p1.avatar),
-                      SizedBox(
-                        width: 10.0,
-                      ),
-                      Flexible(
-                        child: Text(
-                          t1p1.name == null ? S.of(context).first : t1p1.name,
-                          softWrap: true,
-                          maxLines: 5,
-                          style: Theme.of(context).textTheme.body1,
-                        ),
-                      ),
-                    ],
-                  ),
+                _firstInput,
+                SizedBox(
+                  height: 4.0,
                 ),
-                Container(
-                  width: MediaQuery.of(context).size.width / 2 - 20.0,
-                  child: Row(
-                    children: <Widget>[
-                      _buildCircleAvatar(2, t1p2.avatar),
-                      SizedBox(
-                        width: 10.0,
-                      ),
-                      Flexible(
-                        child: Text(
-                            t1p2.name == null
-                                ? S.of(context).second
-                                : t1p2.name,
-                            softWrap: true,
-                            maxLines: 5,
-                            style: Theme.of(context).textTheme.body1),
-                      ),
-                    ],
-                  ),
-                )
+                _secondInput
               ],
             ),
           ),
@@ -235,55 +285,84 @@ class _NewGamePage extends State<NewGamePage> {
   }
 
   Widget _buildCardTeam2Names() {
+    bool portraitOrientation =
+        MediaQuery
+            .of(context)
+            .orientation == Orientation.portrait;
+    double width = MediaQuery
+        .of(context)
+        .size
+        .width;
+
+    Container _firstInput = Container(
+      width: width / 2 - 30.0,
+      child: Row(
+        children: <Widget>[
+          _buildCircleAvatar(3, t2p1.avatar),
+          SizedBox(
+            width: 10.0,
+          ),
+          Flexible(
+            child: Text(t2p1.name == null ? S
+                .of(context)
+                .second : t2p1.name,
+                softWrap: true,
+                maxLines: 5,
+                style: Theme
+                    .of(context)
+                    .textTheme
+                    .body1),
+          ),
+        ],
+      ),
+    );
+
+    Container _secondInput = Container(
+      width: width / 2 - 30.0,
+      child: Row(
+        children: <Widget>[
+          _buildCircleAvatar(4, t2p2.avatar == null ? null : t2p2.avatar),
+          SizedBox(
+            width: 10.0,
+          ),
+          Flexible(
+            child: Text(t2p2.name == null ? S
+                .of(context)
+                .second : t2p2.name,
+                softWrap: true,
+                maxLines: 5,
+                style: Theme
+                    .of(context)
+                    .textTheme
+                    .body1),
+          ),
+        ],
+      ),
+    );
+
     return Card(
       child: Column(
         children: <Widget>[
-          _buildCardHeaders(S.of(context).secondTeamPlayers),
+          _buildCardHeaders(S
+              .of(context)
+              .secondTeamPlayers),
           Container(
+            width: portraitOrientation ? width - 20 : width / 2 - 30,
             padding: EdgeInsets.all(6.0),
-            child: Row(
+            child: portraitOrientation
+                ? Row(
               children: <Widget>[
-                Container(
-                  width: MediaQuery.of(context).size.width / 2 - 20.0,
-                  child: Row(
-                    children: <Widget>[
-                      _buildCircleAvatar(3, t2p1.avatar),
-                      SizedBox(
-                        width: 10.0,
-                      ),
-                      Flexible(
-                        child: Text(
-                            t2p1.name == null
-                                ? S.of(context).second
-                                : t2p1.name,
-                            softWrap: true,
-                            maxLines: 5,
-                            style: Theme.of(context).textTheme.body1),
-                      ),
-                    ],
-                  ),
+                _firstInput,
+                _secondInput,
+              ],
+            )
+                : Column(
+              children: <Widget>[
+                _firstInput,
+                SizedBox(
+                  height: 4.0,
                 ),
-                Container(
-                  width: MediaQuery.of(context).size.width / 2 - 20.0,
-                  child: Row(
-                    children: <Widget>[
-                      _buildCircleAvatar(
-                          4, t2p2.avatar == null ? null : t2p2.avatar),
-                      SizedBox(
-                        width: 10.0,
-                      ),
-                      Flexible(
-                        child: Text(
-                            t2p2.name == null
-                                ? S.of(context).second
-                                : t2p2.name,
-                            softWrap: true,
-                            maxLines: 5,
-                            style: Theme.of(context).textTheme.body1),
-                      ),
-                    ],
-                  ),
-                )
+                _secondInput,
               ],
             ),
           ),
@@ -293,39 +372,67 @@ class _NewGamePage extends State<NewGamePage> {
   }
 
   Widget _buildCardInitPoints() {
-    return Card(
-      color: Theme.of(context).cardColor,
-      child: Column(
-        children: <Widget>[
-          _buildCardHeaders(S.of(context).initPointsOptional),
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
-            child: Row(
-              children: <Widget>[
-                Flexible(
-                  child: TextField(
-                      controller: _t1InitPointController,
-                      decoration: InputDecoration(
-                          labelText: S.of(context).firstTeamPoints),
-                      keyboardType: TextInputType.numberWithOptions(
-                          signed: true, decimal: false)),
-                ),
-                SizedBox(
-                  width: 24,
-                ),
-                Flexible(
-                  child: TextField(
-                    controller: _t2InitPointController,
-                    decoration: InputDecoration(
-                        labelText: S.of(context).secondTeamPoints),
-                    keyboardType: TextInputType.numberWithOptions(
-                        signed: true, decimal: false),
+    double width = MediaQuery
+        .of(context)
+        .size
+        .width;
+    bool portratOrientation =
+        MediaQuery
+            .of(context)
+            .orientation == Orientation.portrait;
+
+    Widget _firstItem = Container(
+      width: width / 2 - 70,
+      child: TextField(
+          controller: _t1InitPointController,
+          decoration: InputDecoration(labelText: S
+              .of(context)
+              .firstTeamPoints),
+          keyboardType:
+          TextInputType.numberWithOptions(signed: true, decimal: false)),
+    );
+
+    Widget _secondItem = Container(
+      width: width / 2 - 70,
+      child: TextField(
+        controller: _t2InitPointController,
+        decoration: InputDecoration(labelText: S
+            .of(context)
+            .secondTeamPoints),
+        keyboardType:
+        TextInputType.numberWithOptions(signed: true, decimal: false),
+      ),
+    );
+
+    return Padding(
+      padding: portratOrientation
+          ? const EdgeInsets.all(0.0)
+          : const EdgeInsets.only(left: 4.0),
+      child: Card(
+        color: Theme
+            .of(context)
+            .cardColor,
+        child: Column(
+          children: <Widget>[
+            _buildCardHeaders(S
+                .of(context)
+                .initPointsOptional,
+                fullWidth: true),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  _firstItem,
+                  SizedBox(
+                    width: 24,
                   ),
-                ),
-              ],
+                  _secondItem,
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -366,24 +473,28 @@ class _NewGamePage extends State<NewGamePage> {
 
   Widget _buildCardGameType() {
     return Card(
-      child: Column(
-        children: <Widget>[
-          _buildCardHeaders(S.of(context).gameType),
-          Wrap(
-            crossAxisAlignment: WrapCrossAlignment.center,
-            alignment: WrapAlignment.center,
-            spacing: 10.0,
-            children: <Widget>[
-              _buildGameTypeChips('165', 1),
-              _buildGameTypeChips('185', 2),
-              _buildGameTypeChips('200', 3),
-              _buildGameTypeChips('225', 4),
-              _buildGameTypeChips('230', 5),
-            ],
-          ),
-        ],
-      ),
-    );
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            _buildCardHeaders(S
+                .of(context)
+                .gameType),
+            Center(
+              child: Container(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    _buildGameTypeChips('165', 1),
+                    _buildGameTypeChips('185', 2),
+                    _buildGameTypeChips('200', 3),
+                    _buildGameTypeChips('225', 4),
+                    _buildGameTypeChips('230', 5),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ));
   }
 
   Widget _buildCardDouble() {
@@ -445,6 +556,7 @@ class _NewGamePage extends State<NewGamePage> {
             iconColor: Colors.white,
             splashColor: Colors.white,
             width: 170.0,
+            height: 32.0,
           ),
         ],
       ),
@@ -478,35 +590,78 @@ class _NewGamePage extends State<NewGamePage> {
 
   @override
   Widget build(BuildContext context) {
+    bool portraitOrientation =
+        MediaQuery
+            .of(context)
+            .orientation == Orientation.portrait;
+
     return Scaffold(
       appBar: AppBar(
         title: Text(S.of(context).newGame),
       ),
       drawer: SideDrawer(),
-      body: Builder(
-        builder: (context) => Column(
-          children: <Widget>[
-            Expanded(
-              child: Container(
-                padding: EdgeInsets.only(
-                    top: 4.0, right: 8.0, left: 8.0, bottom: 8.0),
-                child: Center(
-                  child: ListView(
-                    children: <Widget>[
-                      _buildCardTeam1Names(),
-                      _buildCardTeam2Names(),
-                      _buildCardDouble(),
-                      _buildCardGameType(),
-                      _buildGetPointsAfter1100(),
-                      _buildCardInitPoints(),
-                      _buildCardResetButtons(context),
-                    ],
+      body: portraitOrientation
+          ? Builder(
+        builder: (context) =>
+            Column(
+              children: <Widget>[
+                Expanded(
+                  child: Container(
+                    padding: EdgeInsets.only(
+                        top: 4.0, right: 8.0, left: 8.0, bottom: 8.0),
+                    child: Center(
+                      child: ListView(
+                        children: <Widget>[
+                          _buildCardTeam1Names(),
+                          _buildCardTeam2Names(),
+                          _buildCardDouble(),
+                          _buildCardGameType(),
+                          _buildGetPointsAfter1100(),
+                          _buildCardInitPoints(),
+                          _buildCardResetButtons(context),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
-              ),
+              ],
             ),
-          ],
-        ),
+      )
+          : Builder(
+        builder: (context) =>
+            Column(children: <Widget>[
+              Expanded(
+                child: Container(
+                  padding: EdgeInsets.only(
+                      top: 4.0, right: 8.0, left: 8.0, bottom: 8.0),
+                  child: Center(
+                    child: ListView(
+                      children: <Widget>[
+                        Row(
+                          children: <Widget>[
+                            _buildCardTeam1Names(),
+                            _buildCardTeam2Names(),
+                          ],
+                        ),
+                        Row(
+                          children: <Widget>[
+                            _buildCardGameType(),
+                            _buildCardDouble(),
+                          ],
+                        ),
+                        _buildCardInitPoints(),
+                        Row(
+                          children: <Widget>[
+                            _buildGetPointsAfter1100(),
+                            _buildCardResetButtons(context),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              )
+            ]),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _onStartButtonPress(),
@@ -743,10 +898,30 @@ class _NewGamePage extends State<NewGamePage> {
         'getPointsAfter': _getAfter,
       };
 
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (BuildContext context) => InGamePage(gameData)));
+      Navigator.of(context)
+          .push(MaterialPageRoute(builder: (context) => InGamePage(gameData)));
+//      Navigator.of(context).push(_createRoute(gameData));
     }
   }
+
+//Animation route transition
+//  Route _createRoute(Map<String, dynamic> gameData) {
+//    return PageRouteBuilder(
+//      pageBuilder: (context, animation, secondaryAnimation) =>
+//          InGamePage(gameData),
+//      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+//        var begin = Offset(0.0, 1.0);
+//        var end = Offset.zero;
+//        var curve = Curves.ease;
+//
+//        var tween =
+//            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+//
+//        return SlideTransition(
+//          position: animation.drive(tween),
+//          child: child,
+//        );
+//      },
+//    );
+//  }
 }

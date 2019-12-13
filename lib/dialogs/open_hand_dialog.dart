@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:shelem_shomar/generated/i18n.dart';
 import 'package:shelem_shomar/models/constants.dart';
 import 'package:shelem_shomar/models/player_table.dart';
@@ -115,12 +116,45 @@ class _OpenHandDialogState extends State<OpenHandDialog> {
   }
 
   Widget _buildSmallButtons(String text, bool btnNum) {
+    double width = MediaQuery
+        .of(context)
+        .size
+        .width;
+    double height = MediaQuery
+        .of(context)
+        .size
+        .height;
+    bool portrait = MediaQuery
+        .of(context)
+        .orientation == Orientation.portrait;
+
+    return GestureDetector(
+      onTap: (btnNum) ? () => _onButtonsPress(text) : null,
+      child: Container(
+        width: portrait ? width / 8 : height / 8,
+        height: portrait ? width / 8 : height / 8,
+        padding: EdgeInsets.all(0.0),
+        decoration: BoxDecoration(
+            border: Border.all(color: Theme
+                .of(context)
+                .accentColor),
+            borderRadius: BorderRadius.all(Radius.circular(2.0))),
+        child: Center(
+            child: Text(
+              text,
+              style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+            )),
+      ),
+    );
+
     return ButtonTheme(
       minWidth: 14.0,
       height: 48.0,
       child: OutlineButton(
         borderSide:
-            BorderSide(color: Theme.of(context).accentColor, width: 2.0),
+        BorderSide(color: Theme
+            .of(context)
+            .accentColor, width: 2.0),
         child: Text(
           text,
           style: TextStyle(fontSize: 20.0),
@@ -131,17 +165,34 @@ class _OpenHandDialogState extends State<OpenHandDialog> {
   }
 
   Widget _buildButtonC() {
-    return ButtonTheme(
-      minWidth: 14.0,
-      height: 48.0,
-      child: OutlineButton(
-        child: Text(
-          'C',
-          style: TextStyle(fontSize: 20.0),
-        ),
-        onPressed: () {
-          _onButtonsPress('C');
-        },
+    double width = MediaQuery
+        .of(context)
+        .size
+        .width;
+    double height = MediaQuery
+        .of(context)
+        .size
+        .height;
+    bool portrait = MediaQuery
+        .of(context)
+        .orientation == Orientation.portrait;
+
+    return GestureDetector(
+      onTap: () {
+        _onButtonsPress('C');
+      },
+      child: Container(
+        padding: EdgeInsets.all(portrait ? width / 20 : height / 30),
+        decoration: BoxDecoration(
+            border: Border.all(color: Theme
+                .of(context)
+                .accentColor),
+            borderRadius: BorderRadius.all(Radius.circular(2.0))),
+        child: Center(
+            child: Text(
+              'C',
+              style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+            )),
       ),
     );
   }
@@ -278,7 +329,166 @@ class _OpenHandDialogState extends State<OpenHandDialog> {
     );
   }
 
-  dialogContent(BuildContext context) {
+  _portraitDialogContent(BuildContext context) {
+    Widget _numPadItems = Column(
+      children: <Widget>[
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            _buildSmallButtons('1', btn1),
+            SizedBox(width: 10.0),
+            _buildSmallButtons('2', btn2),
+            SizedBox(width: 10.0),
+            _buildSmallButtons('3', btn3),
+            SizedBox(width: 10.0),
+            _buildSmallButtons('4', btn4),
+          ],
+        ),
+        SizedBox(
+          height: 14.0,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            _buildSmallButtons('5', btn5),
+            SizedBox(width: 10.0),
+            _buildSmallButtons('6', btn6),
+            SizedBox(width: 10.0),
+            _buildSmallButtons('7', btn7),
+            SizedBox(width: 10.0),
+            _buildSmallButtons('8', btn8),
+          ],
+        ),
+        SizedBox(
+          height: 14.0,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            _buildSmallButtons('9', btn9),
+            SizedBox(width: 10.0),
+            _buildSmallButtons('0', btn0),
+            SizedBox(width: 10.0),
+            _buildButtonC(),
+            SizedBox(width: 10.0),
+            SizedBox(
+              width: 46.0,
+            ),
+          ],
+        ),
+      ],
+    );
+
+    Widget _namesAndAvatars = Column(
+      children: <Widget>[
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+            Expanded(
+              flex: 1,
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: <Widget>[
+                    Radio(
+                        value: 1,
+                        groupValue: _radioGroupValue,
+                        onChanged: _setRadioValue),
+                    _buildCheckRadioText(widget.t1p1.name),
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(width: 20),
+            Expanded(
+              flex: 1,
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: <Widget>[
+                    Radio(
+                        value: 3,
+                        groupValue: _radioGroupValue,
+                        onChanged: _setRadioValue),
+                    _buildCheckRadioText(widget.t2p1.name),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+            Expanded(
+              flex: 1,
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: <Widget>[
+                    Radio(
+                        value: 2,
+                        groupValue: _radioGroupValue,
+                        onChanged: _setRadioValue),
+                    _buildCheckRadioText(widget.t1p2.name),
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(width: 20),
+            Expanded(
+              flex: 1,
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: <Widget>[
+                    Radio(
+                        value: 4,
+                        groupValue: _radioGroupValue,
+                        onChanged: _setRadioValue),
+                    _buildCheckRadioText(widget.t2p2.name),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        )
+      ],
+    );
+
+    Widget _radioItems = Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: <Widget>[
+        Row(
+          children: <Widget>[
+            Checkbox(value: _shelemCheck, onChanged: _onCheckboxShelemChanged),
+            _buildCheckRadioText(S
+                .of(context)
+                .shelem),
+          ],
+        ),
+        Row(
+          children: <Widget>[
+            Checkbox(value: _konsCheck, onChanged: _onCheckboxKonsChanged),
+            _buildCheckRadioText(S
+                .of(context)
+                .kons),
+          ],
+        ),
+      ],
+    );
+
+    Widget _okCancelButtons = Row(
+      children: <Widget>[
+        SizedBox(width: 10),
+        _buildBtnOk(),
+        SizedBox(width: 20),
+        _buildBtnCancel(),
+        SizedBox(width: 10),
+      ],
+      mainAxisAlignment: MainAxisAlignment.end,
+    );
+
     return Stack(
       children: <Widget>[
         Container(
@@ -290,183 +500,279 @@ class _OpenHandDialogState extends State<OpenHandDialog> {
           ),
           margin: EdgeInsets.only(top: Constants.AVATAR_RADIUS),
           decoration: new BoxDecoration(
-            color: Theme.of(context).cardColor,
+            color: Theme
+                .of(context)
+                .cardColor,
             shape: BoxShape.rectangle,
             borderRadius: BorderRadius.circular(Constants.PADDING),
             boxShadow: [
               BoxShadow(
-                color: Theme.of(context).secondaryHeaderColor,
+                color: Theme
+                    .of(context)
+                    .secondaryHeaderColor,
                 blurRadius: 10.0,
                 offset: const Offset(1.0, 2.0),
               ),
             ],
           ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min, // To make the card compact
-            children: <Widget>[
-              Text(
-                widget.title,
-                style: TextStyle(
-                  fontSize: 24.0,
-                  fontWeight: FontWeight.w700,
+          child: SingleChildScrollView(
+            child: Container(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min, // To make the card compact
+                  children: <Widget>[
+                    Text(
+                      widget.title,
+                      style: TextStyle(
+                        fontSize: 24.0,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    SizedBox(height: 16.0),
+                    _numPadItems,
+                    SizedBox(
+                      height: 10.0,
+                    ),
+                    Divider(),
+                    _namesAndAvatars,
+                    Divider(),
+                    _radioItems,
+                    Divider(
+                      color: Theme
+                          .of(context)
+                          .secondaryHeaderColor,
+                    ),
+                    _okCancelButtons,
+                  ],
+                )),
+          ),
+        ),
+        _buildCircleAvatar(),
+      ],
+    );
+  }
+
+  _landDialogContent(BuildContext context) {
+    double width = MediaQuery
+        .of(context)
+        .size
+        .width;
+
+    Widget _numPadItems = Column(
+      children: <Widget>[
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            _buildSmallButtons('1', btn1),
+            SizedBox(width: 10.0),
+            _buildSmallButtons('2', btn2),
+            SizedBox(width: 10.0),
+            _buildSmallButtons('3', btn3),
+            SizedBox(width: 10.0),
+            _buildSmallButtons('4', btn4),
+            SizedBox(width: 10.0),
+            _buildSmallButtons('5', btn5),
+          ],
+        ),
+        SizedBox(
+          height: 14.0,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            _buildSmallButtons('6', btn6),
+            SizedBox(width: 4.0),
+            _buildSmallButtons('7', btn7),
+            SizedBox(width: 4.0),
+            _buildSmallButtons('8', btn8),
+            SizedBox(width: 4.0),
+            _buildSmallButtons('9', btn9),
+            SizedBox(width: 4.0),
+            _buildSmallButtons('0', btn0),
+            SizedBox(width: 4.0),
+            _buildButtonC(),
+          ],
+        ),
+      ],
+    );
+
+    Widget _namesAndAvatars = Column(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Row(
+          children: <Widget>[
+            Container(
+              width: width / 6,
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: <Widget>[
+                    Radio(
+                        value: 1,
+                        groupValue: _radioGroupValue,
+                        onChanged: _setRadioValue),
+                    _buildCheckRadioText(widget.t1p1.name),
+                  ],
                 ),
               ),
-              SizedBox(height: 16.0),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  _buildSmallButtons('1', btn1),
-                  SizedBox(width: 10.0),
-                  _buildSmallButtons('2', btn2),
-                  SizedBox(width: 10.0),
-                  _buildSmallButtons('3', btn3),
-                  SizedBox(width: 10.0),
-                  _buildSmallButtons('4', btn4),
-                ],
+            ),
+            SizedBox(width: 20),
+            Container(
+              width: width / 6,
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: <Widget>[
+                    Radio(
+                        value: 2,
+                        groupValue: _radioGroupValue,
+                        onChanged: _setRadioValue),
+                    _buildCheckRadioText(widget.t1p2.name),
+                  ],
+                ),
               ),
-              SizedBox(
-                height: 14.0,
+            ),
+          ],
+        ),
+        Row(
+          children: <Widget>[
+            Container(
+              width: width / 6,
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: <Widget>[
+                    Radio(
+                        value: 3,
+                        groupValue: _radioGroupValue,
+                        onChanged: _setRadioValue),
+                    _buildCheckRadioText(widget.t2p1.name),
+                  ],
+                ),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  _buildSmallButtons('5', btn5),
-                  SizedBox(width: 10.0),
-                  _buildSmallButtons('6', btn6),
-                  SizedBox(width: 10.0),
-                  _buildSmallButtons('7', btn7),
-                  SizedBox(width: 10.0),
-                  _buildSmallButtons('8', btn8),
-                ],
+            ),
+            SizedBox(width: 20),
+            Container(
+              width: width / 6,
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: <Widget>[
+                    Radio(
+                        value: 4,
+                        groupValue: _radioGroupValue,
+                        onChanged: _setRadioValue),
+                    _buildCheckRadioText(widget.t2p2.name),
+                  ],
+                ),
               ),
-              SizedBox(
-                height: 14.0,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  _buildSmallButtons('9', btn9),
-                  SizedBox(width: 10.0),
-                  _buildSmallButtons('0', btn0),
-                  SizedBox(width: 10.0),
-                  _buildButtonC(),
-                  SizedBox(width: 10.0),
-                  SizedBox(
-                    width: 46.0,
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: 10.0,
-              ),
-              Divider(),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  Expanded(
-                    flex: 1,
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: <Widget>[
-                          Radio(
-                              value: 1,
-                              groupValue: _radioGroupValue,
-                              onChanged: _setRadioValue),
-                          _buildCheckRadioText(widget.t1p1.name),
-                        ],
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 20),
-                  Expanded(
-                    flex: 1,
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: <Widget>[
-                          Radio(
-                              value: 3,
-                              groupValue: _radioGroupValue,
-                              onChanged: _setRadioValue),
-                          _buildCheckRadioText(widget.t2p1.name),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  Expanded(
-                    flex: 1,
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: <Widget>[
-                          Radio(
-                              value: 2,
-                              groupValue: _radioGroupValue,
-                              onChanged: _setRadioValue),
-                          _buildCheckRadioText(widget.t1p2.name),
-                        ],
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 20),
-                  Expanded(
-                    flex: 1,
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: <Widget>[
-                          Radio(
-                              value: 4,
-                              groupValue: _radioGroupValue,
-                              onChanged: _setRadioValue),
-                          _buildCheckRadioText(widget.t2p2.name),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              Divider(),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  Row(
-                    children: <Widget>[
-                      Checkbox(
-                          value: _shelemCheck,
-                          onChanged: _onCheckboxShelemChanged),
-                      _buildCheckRadioText(S.of(context).shelem),
-                    ],
-                  ),
-                  Row(
-                    children: <Widget>[
-                      Checkbox(
-                          value: _konsCheck, onChanged: _onCheckboxKonsChanged),
-                      _buildCheckRadioText(S.of(context).kons),
-                    ],
-                  ),
-                ],
-              ),
-              Divider(
-                color: Theme.of(context).secondaryHeaderColor,
-              ),
-              Row(
-                children: <Widget>[
-                  SizedBox(width: 10),
-                  Expanded(child: _buildBtnOk()),
-                  SizedBox(width: 20),
-                  Expanded(child: _buildBtnCancel()),
-                  SizedBox(width: 10),
-                ],
-                mainAxisAlignment: MainAxisAlignment.end,
+            ),
+          ],
+        ),
+      ],
+    );
+
+    Widget _radioItems = Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: <Widget>[
+        Row(
+          children: <Widget>[
+            Checkbox(value: _shelemCheck, onChanged: _onCheckboxShelemChanged),
+            _buildCheckRadioText(S
+                .of(context)
+                .shelem),
+          ],
+        ),
+        Row(
+          children: <Widget>[
+            Checkbox(value: _konsCheck, onChanged: _onCheckboxKonsChanged),
+            _buildCheckRadioText(S
+                .of(context)
+                .kons),
+          ],
+        ),
+      ],
+    );
+
+    Widget _okCancelButtons = Row(
+      children: <Widget>[
+        SizedBox(width: 10),
+        _buildBtnOk(),
+        SizedBox(width: 20),
+        _buildBtnCancel(),
+        SizedBox(width: 10),
+      ],
+      mainAxisAlignment: MainAxisAlignment.end,
+    );
+
+    return Stack(
+      children: <Widget>[
+        Container(
+          padding: EdgeInsets.only(
+            top: Constants.AVATAR_RADIUS + Constants.PADDING,
+            bottom: Constants.PADDING,
+            left: Constants.PADDING,
+            right: Constants.PADDING,
+          ),
+          margin: EdgeInsets.only(top: Constants.AVATAR_RADIUS),
+          decoration: new BoxDecoration(
+            color: Theme
+                .of(context)
+                .cardColor,
+            shape: BoxShape.rectangle,
+            borderRadius: BorderRadius.circular(Constants.PADDING),
+            boxShadow: [
+              BoxShadow(
+                color: Theme
+                    .of(context)
+                    .secondaryHeaderColor,
+                blurRadius: 10.0,
+                offset: const Offset(1.0, 2.0),
               ),
             ],
+          ),
+          child: SingleChildScrollView(
+            child: Container(
+                child: Container(
+                  width: width,
+                  child: Column(
+                    children: <Widget>[
+                      Row(
+                        children: <Widget>[
+                          Column(
+                            children: <Widget>[
+                              _numPadItems,
+                              SizedBox(
+                                height: 10.0,
+                              ),
+                              _okCancelButtons,
+                            ],
+                          ),
+                          Container(
+                            child: Column(
+                              children: <Widget>[
+                                _namesAndAvatars,
+                                SizedBox(
+                                  height: 10.0,
+                                ),
+                                _radioItems,
+                              ],
+                            ),
+                          ),
+                          Column(
+                            children: <Widget>[
+                              Divider(
+                                color: Theme
+                                    .of(context)
+                                    .secondaryHeaderColor,
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                )),
           ),
         ),
         _buildCircleAvatar(),
@@ -482,7 +788,11 @@ class _OpenHandDialogState extends State<OpenHandDialog> {
       ),
       elevation: 0.0,
       backgroundColor: Colors.transparent,
-      child: dialogContent(context),
+      child: OrientationBuilder(builder: (context, orientation) {
+        return orientation == Orientation.portrait
+            ? _portraitDialogContent(context)
+            : _landDialogContent(context);
+      }),
     );
   }
 }

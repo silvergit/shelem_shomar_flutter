@@ -176,6 +176,93 @@ class _CloseHandDialogState extends State<CloseHandDialog> {
   }
 
   dialogContent(BuildContext context) {
+    bool portraitOrientation =
+        MediaQuery
+            .of(context)
+            .orientation == Orientation.portrait;
+
+    Widget _numPadItems = Column(
+      children: <Widget>[
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            _buildSmallButtons('1', btn1),
+            SizedBox(width: 10.0),
+            _buildSmallButtons('2', btn2),
+            SizedBox(width: 10.0),
+            _buildSmallButtons('3', btn3),
+            SizedBox(width: 10.0),
+            _buildSmallButtons('4', btn4),
+          ],
+        ),
+        SizedBox(
+          height: 14.0,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            _buildSmallButtons('5', btn5),
+            SizedBox(width: 10.0),
+            _buildSmallButtons('6', btn6),
+            SizedBox(width: 10.0),
+            _buildSmallButtons('7', btn7),
+            SizedBox(width: 10.0),
+            _buildSmallButtons('8', btn8),
+          ],
+        ),
+        SizedBox(
+          height: 14.0,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            _buildSmallButtons('9', btn9),
+            SizedBox(width: 10.0),
+            _buildSmallButtons('0', btn0),
+            SizedBox(width: 10.0),
+            _buildButtonC(),
+            SizedBox(width: 10.0),
+            SizedBox(
+              width: 46.0,
+            ),
+          ],
+        ),
+      ],
+    );
+
+    Widget _okCancelButtons = portraitOrientation ? Row(
+      children: <Widget>[
+        SizedBox(width: 10),
+        Expanded(child: _buildBtnOk()),
+        SizedBox(width: 20),
+        Expanded(child: _buildBtnCancel()),
+        SizedBox(width: 10),
+      ],
+      mainAxisAlignment: MainAxisAlignment.end,
+    ) : Column(
+      children: <Widget>[
+        _buildBtnOk(),
+        SizedBox(height: 20),
+        _buildBtnCancel(),
+      ],
+      mainAxisAlignment: MainAxisAlignment.end,
+    );
+
+    Widget _circleAvatars = Positioned(
+      left: Constants.PADDING,
+      right: Constants.PADDING,
+      child: CircleAvatar(
+        backgroundColor: Theme
+            .of(context)
+            .accentColor,
+        radius: Constants.AVATAR_RADIUS,
+        child: Text(
+          getPoints,
+          style: TextStyle(fontSize: 28.0),
+        ),
+      ),
+    );
+
     return Stack(
       children: <Widget>[
         Container(
@@ -187,18 +274,23 @@ class _CloseHandDialogState extends State<CloseHandDialog> {
           ),
           margin: EdgeInsets.only(top: Constants.AVATAR_RADIUS),
           decoration: new BoxDecoration(
-            color: Theme.of(context).cardColor,
+            color: Theme
+                .of(context)
+                .cardColor,
             shape: BoxShape.rectangle,
             borderRadius: BorderRadius.circular(Constants.PADDING),
             boxShadow: [
               BoxShadow(
-                color: Theme.of(context).secondaryHeaderColor,
+                color: Theme
+                    .of(context)
+                    .secondaryHeaderColor,
                 blurRadius: 10.0,
                 offset: const Offset(1.0, 2.0),
               ),
             ],
           ),
-          child: Column(
+          child: portraitOrientation
+              ? Column(
             mainAxisSize: MainAxisSize.min, // To make the card compact
             children: <Widget>[
               Text(
@@ -209,79 +301,35 @@ class _CloseHandDialogState extends State<CloseHandDialog> {
                 ),
               ),
               SizedBox(height: 16.0),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  _buildSmallButtons('1', btn1),
-                  SizedBox(width: 10.0),
-                  _buildSmallButtons('2', btn2),
-                  SizedBox(width: 10.0),
-                  _buildSmallButtons('3', btn3),
-                  SizedBox(width: 10.0),
-                  _buildSmallButtons('4', btn4),
-                ],
-              ),
-              SizedBox(
-                height: 14.0,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  _buildSmallButtons('5', btn5),
-                  SizedBox(width: 10.0),
-                  _buildSmallButtons('6', btn6),
-                  SizedBox(width: 10.0),
-                  _buildSmallButtons('7', btn7),
-                  SizedBox(width: 10.0),
-                  _buildSmallButtons('8', btn8),
-                ],
-              ),
-              SizedBox(
-                height: 14.0,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  _buildSmallButtons('9', btn9),
-                  SizedBox(width: 10.0),
-                  _buildSmallButtons('0', btn0),
-                  SizedBox(width: 10.0),
-                  _buildButtonC(),
-                  SizedBox(width: 10.0),
-                  SizedBox(
-                    width: 46.0,
-                  ),
-                ],
-              ),
+              _numPadItems,
               SizedBox(
                 height: 10.0,
               ),
               Divider(),
-              Row(
-                children: <Widget>[
-                  SizedBox(width: 10),
-                  Expanded(child: _buildBtnOk()),
-                  SizedBox(width: 20),
-                  Expanded(child: _buildBtnCancel()),
-                  SizedBox(width: 10),
-                ],
-                mainAxisAlignment: MainAxisAlignment.end,
+              _okCancelButtons,
+            ],
+          )
+              : Row(
+            mainAxisSize: MainAxisSize.min, // To make the card compact
+            children: <Widget>[
+//                    Text(
+//                      widget.title,
+//                      style: TextStyle(
+//                        fontSize: 24.0,
+//                        fontWeight: FontWeight.w700,
+//                      ),
+//                    ),
+//                    SizedBox(height: 16.0),
+              _numPadItems,
+              SizedBox(
+                width: 10.0,
               ),
+//                    Divider(),
+              _okCancelButtons,
             ],
           ),
         ),
-        Positioned(
-          left: Constants.PADDING,
-          right: Constants.PADDING,
-          child: CircleAvatar(
-            backgroundColor: Theme.of(context).accentColor,
-            radius: Constants.AVATAR_RADIUS,
-            child: Text(
-              getPoints,
-              style: TextStyle(fontSize: 28.0),
-            ),
-          ),
-        ),
+        _circleAvatars,
       ],
     );
   }

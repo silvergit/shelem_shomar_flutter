@@ -90,11 +90,21 @@ class _WinnerDetailsState extends State<WinnerDetails>
   }
 
   Widget _buildTopCard(String languageCode) {
+    double width = MediaQuery
+        .of(context)
+        .size
+        .width;
+    bool portraitOrientation =
+        MediaQuery
+            .of(context)
+            .orientation == Orientation.portrait;
+
     return Card(
       color: Theme.of(context).cardColor,
       child: Column(
         children: <Widget>[
           Container(
+            width: portraitOrientation ? null : width / 2,
             padding: EdgeInsets.all(10.0),
             child: Column(
               children: <Widget>[
@@ -122,8 +132,12 @@ class _WinnerDetailsState extends State<WinnerDetails>
                           SizedBox(
                             height: 8.0,
                           ),
-                          Text(widget.playerReadRecords[0].name),
-                          Text(widget.playerReadRecords[1].name),
+                          SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Text(widget.playerReadRecords[0].name)),
+                          SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Text(widget.playerReadRecords[1].name)),
                         ],
                       ),
                     ),
@@ -162,8 +176,12 @@ class _WinnerDetailsState extends State<WinnerDetails>
                           SizedBox(
                             height: 8.0,
                           ),
-                          Text(widget.playerReadRecords[2].name),
-                          Text(widget.playerReadRecords[3].name),
+                          SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Text(widget.playerReadRecords[2].name)),
+                          SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Text(widget.playerReadRecords[3].name)),
                         ],
                       ),
                     ),
@@ -176,22 +194,29 @@ class _WinnerDetailsState extends State<WinnerDetails>
             color: Theme.of(context).accentColor,
             thickness: 2.0,
           ),
-          Row(
+          portraitOrientation
+              ? Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
               Container(
                 padding: EdgeInsets.all(8.0),
                 child: Column(
                   children: <Widget>[
-                    TextWithLocale('${S
-                        .of(context)
-                        .handsPlayed}: ${widget.length}', languageCode),
-                    TextWithLocale('${S
-                        .of(context)
-                        .maxReadIs}: ${getMaxRead()}', languageCode),
-                    TextWithLocale('${S
-                        .of(context)
-                        .gameFinishedIn}: ${widget.gameTime}', languageCode),
+                    TextWithLocale(
+                        '${S
+                            .of(context)
+                            .handsPlayed}: ${widget.length}',
+                        languageCode),
+                    TextWithLocale(
+                        '${S
+                            .of(context)
+                            .maxReadIs}: ${getMaxRead()}',
+                        languageCode),
+                    TextWithLocale(
+                        '${S
+                            .of(context)
+                            .gameFinishedIn}: ${widget.gameTime}',
+                        languageCode),
                     TextWithLocale(
                         '${S
                             .of(context)
@@ -206,7 +231,8 @@ class _WinnerDetailsState extends State<WinnerDetails>
                 ),
               ),
               Container(
-                margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+                margin: EdgeInsets.symmetric(
+                    vertical: 10.0, horizontal: 10.0),
                 padding: EdgeInsets.all(10.0),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -218,15 +244,21 @@ class _WinnerDetailsState extends State<WinnerDetails>
                           size: 36.0,
                         ),
                         Text(
-                          S.of(context).scores,
-                          style: Theme.of(context).textTheme.subtitle,
+                          S
+                              .of(context)
+                              .scores,
+                          style: Theme
+                              .of(context)
+                              .textTheme
+                              .subtitle,
                         ),
                       ],
                     ),
                     SizedBox(
                       height: 20.0,
                     ),
-                    TextWithLocale(widget.team1Points.toString(), languageCode,
+                    TextWithLocale(
+                        widget.team1Points.toString(), languageCode,
                         fontSize: Theme
                             .of(context)
                             .textTheme
@@ -235,7 +267,8 @@ class _WinnerDetailsState extends State<WinnerDetails>
                     SizedBox(
                       height: 4.0,
                     ),
-                    TextWithLocale(widget.team2Points.toString(), languageCode,
+                    TextWithLocale(
+                        widget.team2Points.toString(), languageCode,
                         fontSize: Theme
                             .of(context)
                             .textTheme
@@ -245,6 +278,95 @@ class _WinnerDetailsState extends State<WinnerDetails>
                 ),
               ),
             ],
+          )
+              : Expanded(
+            child: SingleChildScrollView(
+              scrollDirection: Axis.vertical,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  Container(
+                    padding: EdgeInsets.all(8.0),
+                    child: Column(
+                      children: <Widget>[
+                        TextWithLocale(
+                            '${S
+                                .of(context)
+                                .handsPlayed}: ${widget.length}',
+                            languageCode),
+                        TextWithLocale(
+                            '${S
+                                .of(context)
+                                .maxReadIs}: ${getMaxRead()}',
+                            languageCode),
+                        TextWithLocale(
+                            '${S
+                                .of(context)
+                                .gameFinishedIn}: ${widget.gameTime}',
+                            languageCode),
+                        TextWithLocale(
+                            '${S
+                                .of(context)
+                                .doublePositive}: ${widget.dPosCount}',
+                            languageCode),
+                        TextWithLocale(
+                            '${S
+                                .of(context)
+                                .doubleNegative}: ${widget.dNegCount}',
+                            languageCode),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    margin: EdgeInsets.symmetric(
+                        vertical: 10.0, horizontal: 10.0),
+                    padding: EdgeInsets.all(10.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Row(
+                          children: <Widget>[
+                            Icon(
+                              Icons.event_note,
+                              size: 36.0,
+                            ),
+                            Text(
+                              S
+                                  .of(context)
+                                  .scores,
+                              style: Theme
+                                  .of(context)
+                                  .textTheme
+                                  .subtitle,
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 20.0,
+                        ),
+                        TextWithLocale(
+                            widget.team1Points.toString(), languageCode,
+                            fontSize: Theme
+                                .of(context)
+                                .textTheme
+                                .subtitle
+                                .fontSize),
+                        SizedBox(
+                          height: 4.0,
+                        ),
+                        TextWithLocale(
+                            widget.team2Points.toString(), languageCode,
+                            fontSize: Theme
+                                .of(context)
+                                .textTheme
+                                .subtitle
+                                .fontSize),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
         ],
       ),
@@ -280,17 +402,19 @@ class _WinnerDetailsState extends State<WinnerDetails>
             Column(
               children: <Widget>[
                 ScoreLabel(getPlayerScore(player).toString()),
-                TextWithLocale('${S
-                    .of(context)
-                    .wins} : ${player.wins}', languageCode,
+                TextWithLocale(
+                    '${S
+                        .of(context)
+                        .wins} : ${player.wins}', languageCode,
                     fontSize: Theme
                         .of(context)
                         .textTheme
                         .body1
                         .fontSize),
-                TextWithLocale('${S
-                    .of(context)
-                    .looses} : ${player.looses}', languageCode,
+                TextWithLocale(
+                    '${S
+                        .of(context)
+                        .looses} : ${player.looses}', languageCode,
                     fontSize: Theme
                         .of(context)
                         .textTheme
@@ -319,25 +443,55 @@ class _WinnerDetailsState extends State<WinnerDetails>
     String languageCode = Localizations
         .localeOf(context)
         .languageCode;
+
+    bool portraitOrientation =
+        MediaQuery
+            .of(context)
+            .orientation == Orientation.portrait;
+
     return Scaffold(
       appBar: AppBar(
         title: Text(S.of(context).gameDetails),
         elevation: 0,
       ),
       drawer: SideDrawer(),
-      body: Column(
+      body: portraitOrientation
+          ? Column(
         children: <Widget>[
           _buildTopCard(languageCode),
           Expanded(
             child: ListView(
               children: <Widget>[
-                _buildPlayerCards(widget.playerReadRecords[0], languageCode),
-                _buildPlayerCards(widget.playerReadRecords[1], languageCode),
-                _buildPlayerCards(widget.playerReadRecords[2], languageCode),
-                _buildPlayerCards(widget.playerReadRecords[3], languageCode),
+                _buildPlayerCards(
+                    widget.playerReadRecords[0], languageCode),
+                _buildPlayerCards(
+                    widget.playerReadRecords[1], languageCode),
+                _buildPlayerCards(
+                    widget.playerReadRecords[2], languageCode),
+                _buildPlayerCards(
+                    widget.playerReadRecords[3], languageCode),
               ],
             ),
           )
+        ],
+      )
+          : Row(
+        children: <Widget>[
+          _buildTopCard(languageCode),
+          Expanded(
+            child: ListView(
+              children: <Widget>[
+                _buildPlayerCards(
+                    widget.playerReadRecords[0], languageCode),
+                _buildPlayerCards(
+                    widget.playerReadRecords[1], languageCode),
+                _buildPlayerCards(
+                    widget.playerReadRecords[2], languageCode),
+                _buildPlayerCards(
+                    widget.playerReadRecords[3], languageCode),
+              ],
+            ),
+          ),
         ],
       ),
     );

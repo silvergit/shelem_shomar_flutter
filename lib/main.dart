@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shelem_shomar/generated/i18n.dart';
@@ -57,10 +56,10 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     //Only Portrate orientaition
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
-    ]); //
+//    SystemChrome.setPreferredOrientations([
+//      DeviceOrientation.portraitUp,
+//      DeviceOrientation.portraitDown,
+//    ]); //
 
     if (this.locale == null) {
       this.locale = Locale('fa');
