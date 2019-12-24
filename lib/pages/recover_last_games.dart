@@ -148,7 +148,7 @@ class _RecoverLastGamesState extends State<RecoverLastGames> {
   Future<List<PointsTable>> getPoints() async {
     var db = DBHelper();
 
-    List<PointsTable> points = await db.getpoints(widget.game.id);
+    List<PointsTable> points = await db.getPoints(widget.game.id);
 
     return points;
   }

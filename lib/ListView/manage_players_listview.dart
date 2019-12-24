@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shelem_shomar/Widgets/custom_circle_avatar.dart';
+import 'package:shelem_shomar/Widgets/scale_anim_widget.dart';
 import 'package:shelem_shomar/generated/i18n.dart';
 import 'package:shelem_shomar/helpers/dbhelper.dart';
 import 'package:shelem_shomar/models/player_table.dart';
@@ -134,7 +135,7 @@ class _ManagePlayersListViewState extends State<ManagePlayersListView> {
       itemBuilder: (BuildContext context, int index) {
         return Column(
           children: <Widget>[
-            _buildListBody(index),
+            ScaleAnimWidget(_buildListBody(index)),
             Divider(
               color: Theme.of(context).accentColor,
             ),

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 class BottomBarInGame extends StatelessWidget {
-  Widget bottonWidget;
+  final Widget bottomWidget;
 
-  BottomBarInGame(this.bottonWidget);
+  BottomBarInGame(this.bottomWidget);
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +22,7 @@ class BottomBarInGame extends StatelessWidget {
           ),
           color: Theme.of(context).primaryColor,
         ),
-        child: bottonWidget,
+        child: bottomWidget,
       ),
     );
   }

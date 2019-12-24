@@ -1,12 +1,51 @@
 import 'package:flutter/material.dart';
 import 'package:shelem_shomar/Widgets/my-buttons.dart';
+import 'package:shelem_shomar/Widgets/scale_anim_widget.dart';
 import 'package:shelem_shomar/generated/i18n.dart';
 import 'package:wave/config.dart';
 import 'package:wave/wave.dart';
 
 import '../Widgets/side_drawer.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
+  HomePage();
+
+  @override
+  State<StatefulWidget> createState() {
+    return _HomePageState();
+  }
+}
+
+class _HomePageState extends State<HomePage>
+    with SingleTickerProviderStateMixin {
+  Animation _animation1, _animation2, _animation3, _animation4;
+  AnimationController _animationController;
+
+  @override
+  initState() {
+    super.initState();
+
+    _animationController =
+        AnimationController(vsync: this, duration: Duration(seconds: 2));
+
+    _animation1 = Tween(begin: -1.0, end: 0.0).animate(CurvedAnimation(
+        parent: _animationController, curve: Curves.fastOutSlowIn));
+
+    _animation2 = Tween(begin: -1.0, end: 0.0).animate(CurvedAnimation(
+        parent: _animationController,
+        curve: Interval(0.5, 1.0, curve: Curves.fastOutSlowIn)));
+
+    _animation3 = Tween(begin: -1.0, end: 0.0).animate(CurvedAnimation(
+        parent: _animationController,
+        curve: Interval(0.75, 1.0, curve: Curves.fastOutSlowIn)));
+
+    _animation4 = Tween(begin: -1.0, end: 0.0).animate(CurvedAnimation(
+        parent: _animationController,
+        curve: Interval(0.8, 1.0, curve: Curves.fastOutSlowIn)));
+
+    _animationController.forward();
+  }
+
   Widget _getSomeSpace(double width, double height) {
     return SizedBox(
       width: width,
@@ -18,7 +57,6 @@ class HomePage extends StatelessWidget {
     return Container(
       child: Card(
         elevation: 12.0,
-//        margin: EdgeInsets.only(right: 16.0, left: 16.0, bottom: 16.0),
         clipBehavior: Clip.antiAlias,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(0.0))),
@@ -45,9 +83,10 @@ class HomePage extends StatelessWidget {
   ];
 
   Widget _buildTopCard(BuildContext context) {
-    bool portraitOrientation = MediaQuery
-        .of(context)
-        .orientation == Orientation.portrait;
+    bool portraitOrientation =
+        MediaQuery
+            .of(context)
+            .orientation == Orientation.portrait;
     double height = MediaQuery
         .of(context)
         .size
@@ -119,7 +158,12 @@ class HomePage extends StatelessWidget {
       fontSize: 24.0,
       height: MediaQuery
           .of(context)
-          .orientation == Orientation.portrait ? 60.0 : (MediaQuery
+          .orientation == Orientation.portrait
+          ? (MediaQuery
+          .of(context)
+          .size
+          .height - 20) / 9
+          : (MediaQuery
           .of(context)
           .size
           .height - 20) / 6,
@@ -149,17 +193,39 @@ class HomePage extends StatelessWidget {
           width: targetWidth,
           child: Column(
             children: <Widget>[
-              _buildButtons(context, S.of(context).newGame, '/newGame',
-                  Icons.videogame_asset),
+              Transform(
+                  transform: Matrix4.translationValues(
+                      _animation1.value * targetWidth, 0.0, 0.0),
+                  child: ScaleAnimWidget(_buildButtons(context, S
+                      .of(context)
+                      .newGame,
+                      '/newGame', Icons.videogame_asset))),
               _getSomeSpace(0, portraitOrientation ? 20.0 : 4.0),
-              _buildButtons(
-                  context, S.of(context).gamesList, '/gamesList', Icons.list),
+              Transform(
+                  transform: Matrix4.translationValues(
+                      _animation2.value * targetWidth, 0.0, 0.0),
+                  child: ScaleAnimWidget(_buildButtons(context, S
+                      .of(context)
+                      .gamesList,
+                      '/gamesList', Icons.list))),
               _getSomeSpace(0, portraitOrientation ? 20.0 : 4.0),
-              _buildButtons(context, S.of(context).managePlayers,
-                  '/managePlayers', Icons.person),
+              Transform(
+                transform: Matrix4.translationValues(
+                    _animation3.value * targetWidth, 0.0, 0.0),
+                child: ScaleAnimWidget(_buildButtons(context, S
+                    .of(context)
+                    .managePlayers,
+                    '/managePlayers', Icons.person)),
+              ),
               _getSomeSpace(0, portraitOrientation ? 20.0 : 4.0),
-              _buildButtons(
-                  context, S.of(context).topPlayers, '/topPlayers', Icons.cake),
+              Transform(
+                transform: Matrix4.translationValues(
+                    _animation4.value * targetWidth, 0.0, 0.0),
+                child: ScaleAnimWidget(_buildButtons(context, S
+                    .of(context)
+                    .topPlayers,
+                    '/topPlayers', Icons.cake)),
+              ),
             ],
           ),
         ),
@@ -169,57 +235,54 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-//      backgroundColor: Theme.of(context).primaryColor,
-      appBar: AppBar(
-        title: Text(S.of(context).shelemShomar),
-      ),
-      drawer: SideDrawer(),
-      body: MediaQuery
-          .of(context)
-          .orientation == Orientation.portrait
-          ?
-//      Column(
-//              children: <Widget>[
-//                _buildTopCard(context),
-//                Center(
-//                  child: SingleChildScrollView(
-//                    scrollDirection: Axis.vertical,
-//                    child: Column(
-//                      children: <Widget>[
-//                        _getSomeSpace(0.0, 15.0),
-//                        _buildGameButtons(context),
-//                      ],
-//                    ),
-//                  ),
-//                )
-//              ],
-//            )
-      Column(children: <Widget>[_buildTopCard(context),
-        Expanded(
-            child: ListView(children: <Widget>[_buildGameButtons(context)],))
-      ],)
-          : Row(
-        children: <Widget>[
-          Container(
-              width: MediaQuery
+    return AnimatedBuilder(
+        animation: _animationController,
+        builder: (context, child) {
+          return Scaffold(
+            backgroundColor: Theme
+                .of(context)
+                .primaryColor,
+            appBar: AppBar(
+              title: Text(S
                   .of(context)
-                  .size
-                  .width / 2,
-              height: double.infinity,
-              child: SingleChildScrollView(
-                  scrollDirection: Axis.vertical,
-                  child: _buildGameButtons(context))),
-          Container(
-              width: MediaQuery
-                  .of(context)
-                  .size
-                  .width / 2 - 10,
-              child: SingleChildScrollView(
-                  scrollDirection: Axis.vertical,
-                  child: _buildTopCard(context))),
-        ],
-      ),
-    );
+                  .shelemShomar),
+            ),
+            drawer: SideDrawer(),
+            body: MediaQuery
+                .of(context)
+                .orientation == Orientation.portrait
+                ?
+            Column(
+              children: <Widget>[
+                _buildTopCard(context),
+                Expanded(
+                    child: ListView(
+                      children: <Widget>[_buildGameButtons(context)],
+                    ))
+              ],
+            )
+                : Row(
+              children: <Widget>[
+                Container(
+                    width: MediaQuery
+                        .of(context)
+                        .size
+                        .width / 2,
+                    height: double.infinity,
+                    child: SingleChildScrollView(
+                        scrollDirection: Axis.vertical,
+                        child: _buildGameButtons(context))),
+                Container(
+                    width: MediaQuery
+                        .of(context)
+                        .size
+                        .width / 2 - 10,
+                    child: SingleChildScrollView(
+                        scrollDirection: Axis.vertical,
+                        child: _buildTopCard(context))),
+              ],
+            ),
+          );
+        });
   }
 }

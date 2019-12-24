@@ -55,7 +55,7 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    //Only Portrate orientaition
+    //Only Portrait orientation
 //    SystemChrome.setPreferredOrientations([
 //      DeviceOrientation.portraitUp,
 //      DeviceOrientation.portraitDown,

@@ -182,7 +182,9 @@ class _OpenHandDialogState extends State<OpenHandDialog> {
         _onButtonsPress('C');
       },
       child: Container(
-        padding: EdgeInsets.all(portrait ? width / 20 : height / 30),
+        width: portrait ? width / 8 : height / 8,
+        height: portrait ? width / 8 : height / 8,
+        // padding: EdgeInsets.all(portrait ? width / 20 : height / 30),
         decoration: BoxDecoration(
             border: Border.all(color: Theme
                 .of(context)

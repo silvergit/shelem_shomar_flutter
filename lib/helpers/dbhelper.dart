@@ -154,7 +154,7 @@ class DBHelper {
     return states;
   }
 
-  Future<List<PointsTable>> getpoints(int gameId) async {
+  Future<List<PointsTable>> getPoints(int gameId) async {
     var dbClient = await db;
     List<Map> list = await dbClient.query(PointsTable.TABLE_NAME,
         where: PointsTable.GAME_ID + "=?", whereArgs: [gameId]);

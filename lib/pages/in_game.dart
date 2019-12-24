@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shelem_shomar/ListView/chart_listview.dart';
 import 'package:shelem_shomar/Widgets/bottom-bar-ingame.dart';
 import 'package:shelem_shomar/Widgets/custom_circle_avatar.dart';
+import 'package:shelem_shomar/Widgets/scale_anim_widget.dart';
 import 'package:shelem_shomar/Widgets/side_drawer.dart';
 import 'package:shelem_shomar/Widgets/text-with-locale-support.dart';
 import 'package:shelem_shomar/dialogs/close_hand_dialog.dart';
@@ -411,142 +412,134 @@ class _InGamePage extends State<InGamePage> {
         .size
         .width;
 
+    Widget _finalPoints = Row(
+      children: <Widget>[
+        Text(
+          '${S
+              .of(context)
+              .finalPoints}: ',
+          style: TextStyle(fontSize: 20.0),
+        ),
+        TextWithLocale(
+          _getGoalPoint().toString(),
+          languageCode,
+          fontSize: 16.0,
+        )
+      ],
+    );
+
+    Widget _timeText = TextWithLocale(
+      _time,
+      languageCode,
+      fontSize: 16.0,
+    );
+
+    Widget _dateText = TextWithLocale(
+      _date,
+      languageCode,
+      fontSize: 16.0,
+    );
+
+    Widget _avatarsAndScores = Column(
+      children: <Widget>[
+        Row(
+          children: <Widget>[
+            Expanded(
+              child: TextWithLocale(
+                _team1PointsResult,
+                languageCode,
+                textAlignEn: TextAlign.start,
+                textAlignFa: TextAlign.end,
+                fontSize: 20.0,
+              ),
+            ),
+            CustomCircleAvatar(
+              _t1p1.avatar,
+              radius: 20.0,
+              iconSize: 25.0,
+            ),
+            SizedBox(
+              width: 12.0,
+            ),
+            CustomCircleAvatar(
+              _t1p2.avatar,
+              radius: 20.0,
+              iconSize: 25.0,
+            ),
+          ],
+        ),
+        SizedBox(
+          height: 12.0,
+        ),
+        Row(
+          children: <Widget>[
+            Expanded(
+              child: TextWithLocale(
+                _team2PointsResult,
+                languageCode,
+                textAlignEn: TextAlign.start,
+                textAlignFa: TextAlign.end,
+                fontSize: 20.0,
+              ),
+            ),
+            CustomCircleAvatar(
+              _t2p1.avatar,
+              radius: 20.0,
+              iconSize: 25.0,
+            ),
+            SizedBox(
+              width: 12.0,
+            ),
+            CustomCircleAvatar(
+              _t2p2.avatar,
+              radius: 20.0,
+              iconSize: 25.0,
+            ),
+          ],
+        ),
+      ],
+    );
+
     return Container(
       width: portraitOrientation ? width : width / 3,
-      height: portraitOrientation ? null : MediaQuery
+      height:
+      portraitOrientation ? null : MediaQuery
           .of(context)
           .size
           .height - 80,
       padding: EdgeInsets.all(10.0),
-      color: Theme.of(context).accentColor,
-      margin: portraitOrientation ? EdgeInsets.only(bottom: 10.0) : EdgeInsets
-          .all(0.0),
+      color: Theme
+          .of(context)
+          .accentColor,
+      margin: portraitOrientation
+          ? EdgeInsets.only(bottom: 10.0)
+          : EdgeInsets.all(0.0),
       child: portraitOrientation
           ? Row(children: <Widget>[
         Expanded(
-          child: Row(
-            children: <Widget>[
-              Text(
-                '${S
-                    .of(context)
-                    .finalPoints}: ',
-                style: TextStyle(fontSize: 20.0),
-              ),
-              TextWithLocale(
-                _getGoalPoint().toString(),
-                languageCode,
-                fontSize: 16.0,
-              )
-            ],
-          ),
+          child: _finalPoints,
         ),
-        TextWithLocale(
-          _time,
-          languageCode,
-          fontSize: 16.0,
-        ),
+        _timeText,
         SizedBox(
           width: 16.0,
         ),
-        TextWithLocale(
-          _date,
-          languageCode,
-          fontSize: 16.0,
-        ),
+        _dateText,
       ])
-          : Column(children: <Widget>[
-        Row(
+          : Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            Text(
-              '${S
-                  .of(context)
-                  .finalPoints}: ',
-              style: TextStyle(fontSize: 20.0),
+            _finalPoints,
+            _timeText,
+            SizedBox(
+              width: 16.0,
             ),
-            TextWithLocale(
-              _getGoalPoint().toString(),
-              languageCode,
-              fontSize: 16.0,
-            )
-          ],
-        ),
-        TextWithLocale(
-          _time,
-          languageCode,
-          fontSize: 16.0,
-        ),
-        SizedBox(
-          width: 16.0,
-        ),
-        TextWithLocale(
-          _date,
-          languageCode,
-          fontSize: 16.0,
-        ),
-        Container(
-          padding: EdgeInsets.all(10.0),
-          child: Column(
-            children: <Widget>[
-              Row(
-                children: <Widget>[
-                  Expanded(
-                    child: TextWithLocale(
-                      _team1PointsResult,
-                      languageCode,
-                      textAlignEn: TextAlign.start,
-                      textAlignFa: TextAlign.end,
-                      fontSize: 20.0,
-                    ),
-                  ),
-                  CustomCircleAvatar(
-                    _t1p1.avatar,
-                    radius: 20.0,
-                    iconSize: 25.0,
-                  ),
-                  SizedBox(
-                    width: 12.0,
-                  ),
-                  CustomCircleAvatar(
-                    _t1p2.avatar,
-                    radius: 20.0,
-                    iconSize: 25.0,
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: 12.0,
-              ),
-              Row(
-                children: <Widget>[
-                  Expanded(
-                    child: TextWithLocale(
-                      _team2PointsResult,
-                      languageCode,
-                      textAlignEn: TextAlign.start,
-                      textAlignFa: TextAlign.end,
-                      fontSize: 20.0,
-                    ),
-                  ),
-                  CustomCircleAvatar(
-                    _t2p1.avatar,
-                    radius: 20.0,
-                    iconSize: 25.0,
-                  ),
-                  SizedBox(
-                    width: 12.0,
-                  ),
-                  CustomCircleAvatar(
-                    _t2p2.avatar,
-                    radius: 20.0,
-                    iconSize: 25.0,
-                  ),
-                ],
-              ),
-              _createStartButtonIcon(),
-            ],
-          ),
-        ),
-      ]),
+            _dateText,
+            Container(
+              padding: EdgeInsets.all(10.0),
+              child: _avatarsAndScores,
+            ),
+            ScaleAnimWidget(_createStartButtonIcon())
+          ]),
     );
   }
 
@@ -1007,43 +1000,62 @@ class _InGamePage extends State<InGamePage> {
             .of(context)
             .orientation == Orientation.portrait;
 
-    if (!btnGameState)
-      return portraitOrientation
-          ? IconButton(
-        icon: Icon(Icons.do_not_disturb_alt),
-        onPressed: null,
-      )
-          : RaisedButton(
-        child: Text(S
-            .of(context)
-            .gameOver),
-        onPressed: null,
-      );
-    else {
-      if (_changeButtonOpenCloseText)
-        return portraitOrientation
-            ? IconButton(
-          icon: Icon(Icons.play_arrow),
-          onPressed: _showOpenHandDialog,
-        )
-            : RaisedButton(
-          child: Text(S
-              .of(context)
-              .openHand),
-          onPressed: _showOpenHandDialog,
-        );
-      else
-        return portraitOrientation
-            ? IconButton(
-          icon: Icon(Icons.stop),
-          onPressed: _showCloseHandDialog,
-        )
-            : RaisedButton(
-          child: Text(S
-              .of(context)
-              .closeHand),
-          onPressed: _showCloseHandDialog,
-        );
+    Widget _disableButton = portraitOrientation
+        ? IconButton(
+      icon: Icon(Icons.do_not_disturb_alt),
+      onPressed: null,
+    )
+        : RaisedButton(
+      elevation: 10,
+      color: Theme
+          .of(context)
+          .accentColor,
+      child: Text(S
+          .of(context)
+          .gameOver),
+      onPressed: null,
+    );
+
+    Widget _openButton = portraitOrientation
+        ? IconButton(
+      icon: Icon(Icons.play_arrow),
+      onPressed: _showOpenHandDialog,
+    )
+        : RaisedButton(
+      elevation: 10,
+      color: Theme
+          .of(context)
+          .accentColor,
+      child: Text(S
+          .of(context)
+          .openHand),
+      onPressed: _showOpenHandDialog,
+    );
+
+    Widget _closeButton = portraitOrientation
+        ? IconButton(
+      icon: Icon(Icons.stop),
+      onPressed: _showCloseHandDialog,
+    )
+        : RaisedButton(
+      elevation: 10,
+      color: Theme
+          .of(context)
+          .accentColor,
+      child: Text(S
+          .of(context)
+          .closeHand),
+      onPressed: _showCloseHandDialog,
+    );
+
+    if (!btnGameState) {
+      return _disableButton;
+    } else {
+      if (_changeButtonOpenCloseText) {
+        return _openButton;
+      } else {
+        return _closeButton;
+      }
     }
   }
 }

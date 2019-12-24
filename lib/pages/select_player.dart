@@ -65,7 +65,7 @@ class _SelectPlayerState extends State<SelectPlayer> {
                   return snapshot.hasData
                       ? _buildListView(data)
                       ////////
-                      : _buildEmptyErea();
+                      : _buildEmptyArea();
                 }),
           ),
         ],
@@ -125,7 +125,7 @@ class _SelectPlayerState extends State<SelectPlayer> {
     );
   }
 
-  Widget _buildEmptyErea() {
+  Widget _buildEmptyArea() {
     return Center(
       child: Text(
         S.of(context).addPlayer,

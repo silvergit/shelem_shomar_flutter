@@ -69,10 +69,11 @@ class _TopPlayersState extends State<TopPlayers> {
         future:
             Future.wait([db.getPlayers(), db.getAllGames(), db.getWinLooses()])
                 .then(
-          (response) => new CollectAllDatas(
+                  (response) =>
+              new CollectAllData(
               players: response[0], games: response[1], states: response[2]),
         ),
-        builder: (context, AsyncSnapshot<CollectAllDatas> snapshot) {
+        builder: (context, AsyncSnapshot<CollectAllData> snapshot) {
           if (snapshot.hasError) {
             print(snapshot.error);
           }
@@ -93,10 +94,10 @@ class _TopPlayersState extends State<TopPlayers> {
   }
 }
 
-class CollectAllDatas {
+class CollectAllData {
   List<WinLossTable> states;
   List<GameTable> games;
   List<PlayerTable> players;
 
-  CollectAllDatas({this.players, this.states, this.games});
+  CollectAllData({this.players, this.states, this.games});
 }

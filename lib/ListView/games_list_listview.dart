@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shelem_shomar/Widgets/custom_circle_avatar.dart';
+import 'package:shelem_shomar/Widgets/scale_anim_widget.dart';
 import 'package:shelem_shomar/Widgets/score_label.dart';
 import 'package:shelem_shomar/Widgets/text-with-locale-support.dart';
 import 'package:shelem_shomar/generated/i18n.dart';
@@ -102,18 +103,8 @@ class _GamesListView extends State<GamesListListView> {
       padding: EdgeInsets.only(left: 10.0, right: 10.0),
       shrinkWrap: true,
       itemBuilder: (BuildContext context, int index) {
-        return GestureDetector(
-          onTap: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) =>
-                      RecoverLastGames(
-                          widget.games[index], widget.games[index].team1Points,
-                          widget.games[index].team2Points),
-                ));
-          },
-          child: Card(
+        return ScaleAnimWidget(
+          Card(
             color: Theme.of(context).cardColor,
             child: Column(
               children: <Widget>[
@@ -192,9 +183,23 @@ class _GamesListView extends State<GamesListListView> {
               ],
             ),
           ),
+          onTapWidget: () {
+            _onTap(index);
+          },
         );
       },
       itemCount: widget.games.length,
     );
+  }
+
+  _onTap(int index) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) =>
+              RecoverLastGames(widget.games[index],
+                  widget.games[index].team1Points,
+                  widget.games[index].team2Points),
+        ));
   }
 }

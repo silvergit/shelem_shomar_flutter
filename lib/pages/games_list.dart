@@ -29,7 +29,6 @@ class _GameListState extends State<GamesList> {
             print(snapshot.error);
           }
           var data = snapshot.data;
-          print(data);
           return snapshot.hasData
               ? GamesListListView(data)
               : Center(

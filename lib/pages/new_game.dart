@@ -376,7 +376,7 @@ class _NewGamePage extends State<NewGamePage> {
         .of(context)
         .size
         .width;
-    bool portratOrientation =
+    bool portraitOrientation =
         MediaQuery
             .of(context)
             .orientation == Orientation.portrait;
@@ -405,7 +405,7 @@ class _NewGamePage extends State<NewGamePage> {
     );
 
     return Padding(
-      padding: portratOrientation
+      padding: portraitOrientation
           ? const EdgeInsets.all(0.0)
           : const EdgeInsets.only(left: 4.0),
       child: Card(
