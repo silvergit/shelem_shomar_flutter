@@ -46,6 +46,12 @@ class _HomePageState extends State<HomePage>
     _animationController.forward();
   }
 
+  @override
+  dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
   Widget _getSomeSpace(double width, double height) {
     return SizedBox(
       width: width,
@@ -173,7 +179,7 @@ class _HomePageState extends State<HomePage>
       backColor: Theme.of(context).primaryColor,
       fontColor: Theme.of(context).canvasColor,
       iconColor: Colors.white,
-      splashColor: Colors.white,
+      splashColor: Colors.white.withOpacity(.1),
     );
   }
 
@@ -196,35 +202,41 @@ class _HomePageState extends State<HomePage>
               Transform(
                   transform: Matrix4.translationValues(
                       _animation1.value * targetWidth, 0.0, 0.0),
-                  child: ScaleAnimWidget(_buildButtons(context, S
-                      .of(context)
-                      .newGame,
-                      '/newGame', Icons.videogame_asset))),
+                  child: ScaleAnimWidget(_buildButtons(
+                      context,
+                      S
+                          .of(context)
+                          .newGame,
+                      '/newGame',
+                      Icons.videogame_asset))),
               _getSomeSpace(0, portraitOrientation ? 20.0 : 4.0),
               Transform(
                   transform: Matrix4.translationValues(
                       _animation2.value * targetWidth, 0.0, 0.0),
-                  child: ScaleAnimWidget(_buildButtons(context, S
-                      .of(context)
-                      .gamesList,
-                      '/gamesList', Icons.list))),
+                  child: ScaleAnimWidget(_buildButtons(context,
+                      S
+                          .of(context)
+                          .gamesList, '/gamesList', Icons.list))),
               _getSomeSpace(0, portraitOrientation ? 20.0 : 4.0),
               Transform(
                 transform: Matrix4.translationValues(
                     _animation3.value * targetWidth, 0.0, 0.0),
-                child: ScaleAnimWidget(_buildButtons(context, S
-                    .of(context)
-                    .managePlayers,
-                    '/managePlayers', Icons.person)),
+                child: ScaleAnimWidget(_buildButtons(
+                    context,
+                    S
+                        .of(context)
+                        .managePlayers,
+                    '/managePlayers',
+                    Icons.person)),
               ),
               _getSomeSpace(0, portraitOrientation ? 20.0 : 4.0),
               Transform(
                 transform: Matrix4.translationValues(
                     _animation4.value * targetWidth, 0.0, 0.0),
-                child: ScaleAnimWidget(_buildButtons(context, S
-                    .of(context)
-                    .topPlayers,
-                    '/topPlayers', Icons.cake)),
+                child: ScaleAnimWidget(_buildButtons(context,
+                    S
+                        .of(context)
+                        .topPlayers, '/topPlayers', Icons.cake)),
               ),
             ],
           ),
@@ -236,53 +248,53 @@ class _HomePageState extends State<HomePage>
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
-        animation: _animationController,
-        builder: (context, child) {
-          return Scaffold(
-            backgroundColor: Theme
+      animation: _animationController,
+      builder: (context, child) {
+        return Scaffold(
+          backgroundColor: Theme
+              .of(context)
+              .primaryColor,
+          appBar: AppBar(
+            title: Text(S
                 .of(context)
-                .primaryColor,
-            appBar: AppBar(
-              title: Text(S
-                  .of(context)
-                  .shelemShomar),
-            ),
-            drawer: SideDrawer(),
-            body: MediaQuery
-                .of(context)
-                .orientation == Orientation.portrait
-                ?
-            Column(
-              children: <Widget>[
-                _buildTopCard(context),
-                Expanded(
-                    child: ListView(
+                .shelemShomar),
+          ),
+          drawer: SideDrawer(),
+          body: MediaQuery
+              .of(context)
+              .orientation == Orientation.portrait
+              ? Column(
+            children: <Widget>[
+              _buildTopCard(context),
+              Expanded(
+                  child: ListView(
                       children: <Widget>[_buildGameButtons(context)],
                     ))
-              ],
-            )
-                : Row(
-              children: <Widget>[
-                Container(
-                    width: MediaQuery
-                        .of(context)
-                        .size
-                        .width / 2,
-                    height: double.infinity,
-                    child: SingleChildScrollView(
-                        scrollDirection: Axis.vertical,
-                        child: _buildGameButtons(context))),
-                Container(
-                    width: MediaQuery
-                        .of(context)
-                        .size
-                        .width / 2 - 10,
-                    child: SingleChildScrollView(
-                        scrollDirection: Axis.vertical,
-                        child: _buildTopCard(context))),
-              ],
-            ),
-          );
-        });
+            ],
+          )
+              : Row(
+            children: <Widget>[
+              Container(
+                  width: MediaQuery
+                      .of(context)
+                      .size
+                      .width / 2,
+                  height: double.infinity,
+                  child: SingleChildScrollView(
+                      scrollDirection: Axis.vertical,
+                      child: _buildGameButtons(context))),
+              Container(
+                  width: MediaQuery
+                      .of(context)
+                      .size
+                      .width / 2 - 10,
+                  child: SingleChildScrollView(
+                      scrollDirection: Axis.vertical,
+                      child: _buildTopCard(context))),
+            ],
+          ),
+        );
+      },
+    );
   }
 }

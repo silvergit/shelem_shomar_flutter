@@ -121,6 +121,13 @@
             </list>
           </value>
         </entry>
+        <entry key="flutter_spinkit">
+          <value>
+            <list>
+              <option value="/opt/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_spinkit-2.1.0/lib" />
+            </list>
+          </value>
+        </entry>
         <entry key="flutter_test">
           <value>
             <list>
@@ -440,6 +447,7 @@
       <root url="file:///opt/flutter/.pub-cache/hosted/pub.dartlang.org/file_picker-1.4.2/lib" />
       <root url="file:///opt/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_html-0.8.2/lib" />
       <root url="file:///opt/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_slidable_list_view-1.2.7/lib" />
+      <root url="file:///opt/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_spinkit-2.1.0/lib" />
       <root url="file:///opt/flutter/.pub-cache/hosted/pub.dartlang.org/front_end-0.1.27/lib" />
       <root url="file:///opt/flutter/.pub-cache/hosted/pub.dartlang.org/gen_lang-0.1.2/lib" />
       <root url="file:///opt/flutter/.pub-cache/hosted/pub.dartlang.org/get_version-0.1.0/lib" />

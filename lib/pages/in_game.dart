@@ -6,7 +6,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shelem_shomar/ListView/chart_listview.dart';
 import 'package:shelem_shomar/Widgets/bottom-bar-ingame.dart';
 import 'package:shelem_shomar/Widgets/custom_circle_avatar.dart';
-import 'package:shelem_shomar/Widgets/scale_anim_widget.dart';
 import 'package:shelem_shomar/Widgets/side_drawer.dart';
 import 'package:shelem_shomar/Widgets/text-with-locale-support.dart';
 import 'package:shelem_shomar/dialogs/close_hand_dialog.dart';
@@ -32,7 +31,8 @@ class InGamePage extends StatefulWidget {
   }
 }
 
-class _InGamePage extends State<InGamePage> {
+class _InGamePage extends State<InGamePage>
+    with SingleTickerProviderStateMixin {
   //INIT
   List<Item> listItems = [];
   bool _changeButtonOpenCloseText = true;
@@ -63,6 +63,9 @@ class _InGamePage extends State<InGamePage> {
   int _listTypeIndex;
   bool _getAfter = false;
 
+  AnimationController _animationController;
+  Animation _animation;
+
   @override
   void initState() {
     super.initState();
@@ -89,11 +92,20 @@ class _InGamePage extends State<InGamePage> {
     _getAfter = widget.gameData['getPointsAfter'];
 
     _loadSharedPreferences();
+
+    _animationController =
+        AnimationController(vsync: this, duration: Duration(seconds: 1));
+
+    _animation = Tween(begin: -1.0, end: 0.0).animate(
+        CurvedAnimation(parent: _animationController, curve: Curves.bounceOut));
+
+    _animationController.forward();
   }
 
   @override
   void dispose() {
     _timer?.cancel();
+    _animationController.dispose();
     super.dispose();
   }
 
@@ -538,7 +550,7 @@ class _InGamePage extends State<InGamePage> {
               padding: EdgeInsets.all(10.0),
               child: _avatarsAndScores,
             ),
-            ScaleAnimWidget(_createStartButtonIcon())
+            _createStartButtonIcon()
           ]),
     );
   }

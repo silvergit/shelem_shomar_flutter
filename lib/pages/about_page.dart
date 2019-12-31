@@ -87,8 +87,8 @@ class _AboutPageState extends State<AboutPage> {
                     left: 16,
                     right: 16,
                   ),
-                  margin: EdgeInsets.symmetric(
-                      horizontal: 50.0, vertical: 20.0),
+                  margin:
+                  EdgeInsets.symmetric(horizontal: 50.0, vertical: 20.0),
                   decoration: new BoxDecoration(
                     color: Colors.white,
                     shape: BoxShape.rectangle,
@@ -212,7 +212,8 @@ class _AboutPageState extends State<AboutPage> {
         _contact,
       ],
     )
-        : Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        : Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       mainAxisSize: MainAxisSize.min, // To make the card compact
       children: <Widget>[
         Column(
@@ -240,7 +241,6 @@ class _AboutPageState extends State<AboutPage> {
         ),
         Column(
           children: <Widget>[
-
             _spaceH20,
             _developer,
             _spaceH30,

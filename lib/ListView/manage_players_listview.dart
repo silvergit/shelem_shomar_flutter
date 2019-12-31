@@ -15,8 +15,31 @@ class ManagePlayersListView extends StatefulWidget {
   _ManagePlayersListViewState createState() => _ManagePlayersListViewState();
 }
 
-class _ManagePlayersListViewState extends State<ManagePlayersListView> {
+class _ManagePlayersListViewState extends State<ManagePlayersListView>
+    with SingleTickerProviderStateMixin {
+  Animation _animation;
+  AnimationController _animationController;
+
   String editText;
+
+  @override
+  initState() {
+    super.initState();
+
+    _animationController =
+        AnimationController(vsync: this, duration: Duration(seconds: 2));
+
+    _animation = Tween(begin: 1.0, end: 0.0).animate(
+        CurvedAnimation(parent: _animationController, curve: Curves.bounceOut));
+
+    _animationController.forward();
+  }
+
+  @override
+  dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
 
   Future<void> _deletePlayer(int index) async {
     var db = DBHelper();
@@ -108,7 +131,6 @@ class _ManagePlayersListViewState extends State<ManagePlayersListView> {
                       color: Colors.blue,
                     ),
                     onPressed: () =>
-//                        _editPlayer(index)
                         Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -130,16 +152,32 @@ class _ManagePlayersListViewState extends State<ManagePlayersListView> {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: widget.players.length,
-      itemBuilder: (BuildContext context, int index) {
-        return Column(
-          children: <Widget>[
-            ScaleAnimWidget(_buildListBody(index)),
-            Divider(
-              color: Theme.of(context).accentColor,
-            ),
-          ],
+    double width = MediaQuery
+        .of(context)
+        .size
+        .width;
+
+    return AnimatedBuilder(
+      animation: _animation,
+      builder: (context, child) {
+        return ListView.builder(
+          itemCount: widget.players.length,
+          itemBuilder: (BuildContext context, int index) {
+            return Transform(
+              transform:
+              Matrix4.translationValues(0.0, _animation.value * width, 0.0),
+              child: Column(
+                children: <Widget>[
+                  ScaleAnimWidget(_buildListBody(index)),
+                  Divider(
+                    color: Theme
+                        .of(context)
+                        .accentColor,
+                  ),
+                ],
+              ),
+            );
+          },
         );
       },
     );

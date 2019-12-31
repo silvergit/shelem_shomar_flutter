@@ -94,7 +94,10 @@ class MyButton extends StatelessWidget {
             child: InkWell(
               onTap: onPress,
               splashColor: splashColor == null
-                  ? Theme.of(context).accentColor
+                  ? Theme
+                  .of(context)
+                  .accentColor
+                  .withOpacity(0.1)
                   : splashColor,
               borderRadius: BorderRadius.circular(borderRadius),
             ),

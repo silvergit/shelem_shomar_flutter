@@ -27,8 +27,8 @@ class MyThemes {
     primaryColor: Colors.grey.shade800,
     accentColor: Colors.blue.shade800,
     cardColor: Colors.grey.shade700,
-    brightness: Brightness.dark,
     canvasColor: Colors.grey.shade600,
+    brightness: Brightness.dark,
     fontFamily: 'vazir',
     secondaryHeaderColor: Colors.blueGrey.shade200,
     chipTheme: ChipThemeData(
@@ -43,19 +43,19 @@ class MyThemes {
         secondaryLabelStyle: TextStyle(),
         brightness: Brightness.light,
         elevation: 10.0),
-    textTheme: TextTheme(
-      headline: TextStyle(
-          fontSize: 72.0,
-          fontWeight: FontWeight.bold,
-          color: Colors.grey.shade100),
-      title: TextStyle(
-          fontSize: 36.0,
-          fontStyle: FontStyle.italic,
-          color: Colors.grey.shade100),
-      subtitle: TextStyle(fontSize: 24.0, color: Colors.grey.shade100),
-      body2: TextStyle(fontSize: 18.0, color: Colors.grey.shade100),
-      body1: TextStyle(fontSize: 14.0, color: Colors.grey.shade100),
-    ),
+    // textTheme: TextTheme(
+    //   headline: TextStyle(
+    //       fontSize: 72.0,
+    //       fontWeight: FontWeight.bold,
+    //       color: Colors.white),
+    //   title: TextStyle(
+    //       fontSize: 36.0,
+    //       fontStyle: FontStyle.italic,
+    //       color: Colors.white),
+    //   subtitle: TextStyle(fontSize: 24.0, color: Colors.white),
+    //   body2: TextStyle(fontSize: 18.0, color: Colors.white),
+    //   body1: TextStyle(fontSize: 14.0, color: Colors.white),
+    // ),
     buttonColor: Colors.blue.shade800,
 //    buttonTheme: ButtonThemeData(textTheme: ButtonTextTheme.accent)
   );
@@ -79,13 +79,13 @@ class MyThemes {
         secondaryLabelStyle: TextStyle(),
         brightness: Brightness.light,
         elevation: 10.0),
-    textTheme: TextTheme(
-      headline: TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold),
-      title: TextStyle(fontSize: 36.0, fontStyle: FontStyle.italic),
-      body1: TextStyle(
-        fontSize: 14.0,
-      ),
-    ),
+    // textTheme: TextTheme(
+    //   headline: TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold),
+    //   title: TextStyle(fontSize: 36.0, fontStyle: FontStyle.italic),
+    //   body1: TextStyle(
+    //     fontSize: 14.0,
+    //   ),
+    // ),
     buttonColor: Colors.blue.shade800,
   );
 
@@ -108,14 +108,14 @@ class MyThemes {
         brightness: Brightness.light,
         elevation: 10.0),
     fontFamily: 'vazir',
-    textTheme: TextTheme(
-      headline: TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold),
-      title: TextStyle(fontSize: 36.0, fontStyle: FontStyle.italic),
-      caption: TextStyle(fontSize: 28.0),
-      subtitle: TextStyle(fontSize: 24.0),
-      body2: TextStyle(fontSize: 18.0),
-      body1: TextStyle(fontSize: 14.0),
-    ),
+    // textTheme: TextTheme(
+    //   headline: TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold),
+    //   title: TextStyle(fontSize: 36.0, fontStyle: FontStyle.italic),
+    //   caption: TextStyle(fontSize: 28.0),
+    //   subtitle: TextStyle(fontSize: 24.0),
+    //   body2: TextStyle(fontSize: 18.0),
+    //   body1: TextStyle(fontSize: 14.0),
+    // ),
     buttonColor: Colors.green.shade800,
     buttonTheme:
         ButtonThemeData(buttonColor: Colors.red, disabledColor: Colors.yellow),

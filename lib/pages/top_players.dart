@@ -85,7 +85,7 @@ class _TopPlayersState extends State<TopPlayers> {
               : Center(
                   child: Text(
                     S.of(context).addPlayersAndPlayGamesFirst,
-                    style: TextStyle(fontSize: 24.0),
+                    style: TextStyle(fontSize: 16.0),
                   ),
                 );
         },
