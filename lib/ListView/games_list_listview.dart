@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:shelem_shomar/Widgets/custom_circle_avatar.dart';
 import 'package:shelem_shomar/Widgets/scale_anim_widget.dart';
 import 'package:shelem_shomar/Widgets/score_label.dart';
@@ -20,8 +21,27 @@ class GamesListListView extends StatefulWidget {
   }
 }
 
-class _GamesListView extends State<GamesListListView> {
+class _GamesListView extends State<GamesListListView>
+    with SingleTickerProviderStateMixin {
   String name1;
+
+  AnimationController _animationController;
+
+  @override
+  initState() {
+    super.initState();
+
+    _animationController =
+        AnimationController(vsync: this, duration: Duration(seconds: 1));
+
+    _animationController.forward();
+  }
+
+  @override
+  dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
 
   Future<String> getPlayerName(int id) async {
     var db = DBHelper();
@@ -37,13 +57,16 @@ class _GamesListView extends State<GamesListListView> {
 
   FutureBuilder _returnName(int index) {
     return FutureBuilder<String>(
-      future: getPlayerName(index), // a Future<String> or null
+      future: getPlayerName(index),
       builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
         switch (snapshot.connectionState) {
           case ConnectionState.none:
             return new Text(S.of(context).refreshPage);
           case ConnectionState.waiting:
-            return new Text('${S.of(context).loading}...');
+            return SpinKitThreeBounce(
+              color: Colors.grey,
+              size: 14.0,
+            );
           default:
             if (snapshot.hasError)
               return null;
@@ -53,7 +76,7 @@ class _GamesListView extends State<GamesListListView> {
                   child: new Text(
                     '${snapshot.data}',
                     softWrap: false,
-                    style: TextStyle(fontSize: 18.0),
+                    style: TextStyle(fontSize: 14.0),
                   ));
         }
       },
@@ -62,13 +85,16 @@ class _GamesListView extends State<GamesListListView> {
 
   FutureBuilder _returnAvatar(int index) {
     return FutureBuilder<String>(
-      future: getPlayerAvatar(index), // a Future<String> or null
+      future: getPlayerAvatar(index),
       builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
         switch (snapshot.connectionState) {
           case ConnectionState.none:
             return Text(S.of(context).refreshPage);
           case ConnectionState.waiting:
-            return CircularProgressIndicator();
+            return SpinKitDoubleBounce(
+              color: Colors.grey,
+              size: 42.0,
+            );
           default:
             if (snapshot.hasError)
               return null;

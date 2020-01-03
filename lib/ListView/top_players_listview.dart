@@ -18,8 +18,8 @@ class TopPlayersListView extends StatefulWidget {
   }
 }
 
-class _TopPlayersListViewState extends State<TopPlayersListView> {
-
+class _TopPlayersListViewState extends State<TopPlayersListView>
+    with SingleTickerProviderStateMixin {
   List<TopPlayersItem> mItems = [];
   final List<Color> colors = [
     Colors.green.shade300,
@@ -45,6 +45,9 @@ class _TopPlayersListViewState extends State<TopPlayersListView> {
     Colors.red.shade200,
     Colors.red.shade300,
   ];
+
+  Animation _animation0, _animation1, _animation2;
+  AnimationController _animationController;
 
   @override
   void initState() {
@@ -73,6 +76,20 @@ class _TopPlayersListViewState extends State<TopPlayersListView> {
     }
 
     mItems.sort((a, b) => b.getScore().compareTo(a.getScore()));
+
+    _animationController =
+        AnimationController(vsync: this, duration: Duration(seconds: 2));
+    _animation0 = Tween(begin: -1.0, end: 0.0).animate(CurvedAnimation(
+        parent: _animationController,
+        curve: Interval(0.0, 0.3, curve: Curves.bounceIn)));
+    _animation1 = Tween(begin: -1.0, end: 0.0).animate(CurvedAnimation(
+        parent: _animationController,
+        curve: Interval(0.3, 0.6, curve: Curves.bounceIn)));
+    _animation2 = Tween(begin: -1.0, end: 0.0).animate(CurvedAnimation(
+        parent: _animationController,
+        curve: Interval(0.6, 0.9, curve: Curves.bounceIn)));
+
+    _animationController.forward();
   }
 
   @override
@@ -86,7 +103,7 @@ class _TopPlayersListViewState extends State<TopPlayersListView> {
     return colors[p.round()];
   }
 
-  Widget _buildBody() {
+  _buildBody() {
     switch (widget.listGridTypeIndex) {
       case 0:
         return _buildListType();
@@ -257,85 +274,29 @@ class _TopPlayersListViewState extends State<TopPlayersListView> {
 
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery
-        .of(context)
-        .size
-        .width;
-    double height = MediaQuery
-        .of(context)
-        .size
-        .height;
-    double tileSize = width / 4;
-
-    return OrientationBuilder(
-      builder: (context, orientation) {
-        return orientation == Orientation.portrait
-            ?
-        Column(
-          children: <Widget>[
-            Container(
-              color: Theme
-                  .of(context)
-                  .accentColor,
-              padding: EdgeInsets.all(8.0),
-              child: _buildAvatars(tileSize),
-            ),
-            Container(
-              color: Theme
-                  .of(context)
-                  .accentColor,
-              width: width,
-              height: height / 4 + 5,
-              child: Stack(
-                alignment: Alignment.center,
-                children: <Widget>[
-                  _buildPlayerOne(tileSize),
-                  _buildImageOne(tileSize),
-                  _buildPlayerTwo(tileSize),
-                  _buildImageTwo(tileSize),
-                  _buildPlayerThree(tileSize),
-                  _buildImageThree(tileSize),
-                ],
-              ),
-            ),
-            Expanded(child: _buildBody()),
-          ],
-        )
-            : Row(
-          children: <Widget>[
-            Container(
-              width: width / 2,
-              child: Column(
-                children: <Widget>[
-                  Container(
-                    color: Theme
-                        .of(context)
-                        .accentColor,
-                    padding: EdgeInsets.all(8.0),
-                    child: _buildAvatars(tileSize),
-                  ),
-                  Container(
-                    color: Theme
-                        .of(context)
-                        .accentColor,
-                    height: height / 2 + 42,
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: <Widget>[
-                        _buildPlayerOne(tileSize / 2),
-                        _buildImageOne(tileSize / 2),
-                        _buildPlayerTwo(tileSize / 2),
-                        _buildImageTwo(tileSize / 2),
-                        _buildPlayerThree(tileSize / 2),
-                        _buildImageThree(tileSize / 2),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Expanded(child: _buildBody()),
-          ],
+    return AnimatedBuilder(
+      animation: _animationController,
+      builder: (context, child) {
+        return OrientationBuilder(
+          builder: (context, orientation) {
+            return orientation == Orientation.portrait
+                ? Column(
+              children: <Widget>[
+                Container(
+                  child: _buildTopCard(),
+                ),
+                Expanded(child: _buildBody()),
+              ],
+            )
+                : Row(
+              children: <Widget>[
+                Container(
+                  child: _buildTopCard(),
+                ),
+                Expanded(child: _buildBody()),
+              ],
+            );
+          },
         );
       },
     );
@@ -353,174 +314,116 @@ class _TopPlayersListViewState extends State<TopPlayersListView> {
     return '';
   }
 
-  Widget _buildImageOne(double tileSize) {
-    return Positioned(
-      top: 5,
-      child: Image.asset(
-        'assets/images/one.png',
-        width: tileSize / 3,
-        height: tileSize / 3,
+  _buildTopCard() {
+    double width = MediaQuery
+        .of(context)
+        .size
+        .width;
+
+    return Container(
+      padding: EdgeInsets.all(16.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: <Widget>[
+          Transform(
+            transform:
+            Matrix4.translationValues(0.0, _animation2.value * width, 0.0),
+            child: _buildTopChildCards(index: 2),
+          ),
+          Transform(
+            transform:
+            Matrix4.translationValues(0.0, _animation0.value * width, 0.0),
+            child: _buildTopChildCards(index: 0),
+          ),
+          Transform(
+            transform:
+            Matrix4.translationValues(0.0, _animation1.value * width, 0.0),
+            child: _buildTopChildCards(index: 1),
+          ),
+        ],
       ),
     );
   }
 
-  Widget _buildImageTwo(double tileSize) {
-    return Positioned(
-      top: 5,
-      left: tileSize,
-      child: Image.asset(
-        'assets/images/two.png',
-        width: tileSize / 3,
-        height: tileSize / 3,
-      ),
-    );
-  }
+  _buildTopChildCards({@required int index}) {
+    String _imageName;
+    double _padding;
+    Color _color;
 
-  Widget _buildImageThree(double tileSize) {
-    return Positioned(
-      top: 5,
-      right: tileSize,
-      child: Image.asset(
-        'assets/images/three.png',
-        width: tileSize / 3,
-        height: tileSize / 3,
-      ),
-    );
-  }
+    switch (index) {
+      case 0:
+        _imageName = 'assets/images/one.png';
+        _padding = 12.0;
+        _color = Colors.amber.withOpacity(0.3);
+        break;
+      case 1:
+        _imageName = 'assets/images/two.png';
+        _padding = 8.0;
+        _color = Colors.grey.withOpacity(0.3);
+        break;
+      case 2:
+        _imageName = 'assets/images/three.png';
+        _padding = 8.0;
+        _color = Colors.deepOrange.withOpacity(0.3);
+        break;
+    }
 
-  _buildPlayerOne(double tileSize) {
-    return Positioned(
-      bottom: tileSize / 3,
+    return Center(
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15.0),
-          color: Colors.yellow.shade300,
+          color: _color,
         ),
-        width: tileSize,
-        height: tileSize * 1.4,
+        padding: EdgeInsets.all(_padding),
+        margin: EdgeInsets.symmetric(vertical: 16.0, horizontal: 4.0),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            SizedBox(
-              height: 10.0,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                CustomCircleAvatar(
+                  _getPlayerAvatar(mItems[index].getPlayerId()),
+                  radius: 20.0,
+                  iconSize: 20.0,
+                ),
+                SizedBox(
+                  width: 2.0,
+                ),
+                Image.asset(
+                  _imageName,
+                  width: 30.0,
+                  height: 30.0,
+                ),
+              ],
             ),
-            SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Text(_getPlayerName(mItems[0].getPlayerId()))),
+            Container(
+              width: 80.0,
+              child: Center(
+                child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Text(
+                      _getPlayerName(mItems[index].getPlayerId()),
+                    )),
+              ),
+            ),
             ScoreLabel(
-              mItems[0].getScore().toString(),
+              mItems[index].getScore().toString(),
               fontSize: 18.0,
               height: 30.0,
               width: 50.0,
             ),
             Text(
-              '${mItems[0].getWins()} ${S
+              '${mItems[index].getWins()} ${S
                   .of(context)
-                  .wins}\n${mItems[0].getLosses()} ${S
+                  .wins}\n${mItems[index].getLosses()} ${S
                   .of(context)
                   .looses}',
             ),
           ],
         ),
       ),
-    );
-  }
-
-  _buildPlayerTwo(double tileSize) {
-    return Positioned(
-      bottom: tileSize / 4,
-      left: tileSize / 3,
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15.0),
-          color: Colors.yellow.shade300,
-        ),
-        width: tileSize,
-        height: tileSize * 1.4,
-        child: Column(
-          children: <Widget>[
-            SizedBox(
-              height: 10.0,
-            ),
-            SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Text(_getPlayerName(mItems[1].getPlayerId()))),
-            ScoreLabel(
-              mItems[1].getScore().toString(),
-              fontSize: 18.0,
-              height: 30.0,
-              width: 50.0,
-            ),
-            Text(
-              '${mItems[1].getWins()} ${S
-                  .of(context)
-                  .wins}\n${mItems[1].getLosses()} ${S
-                  .of(context)
-                  .looses}',
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  _buildPlayerThree(double tileSize) {
-    return Positioned(
-      bottom: tileSize / 4,
-      right: tileSize / 3,
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15.0),
-          color: Colors.deepOrange.shade200,
-        ),
-        width: tileSize,
-        height: tileSize * 1.4,
-        child: Column(
-          children: <Widget>[
-            SizedBox(
-              height: 10.0,
-            ),
-            SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Text(_getPlayerName(mItems[2].getPlayerId()))),
-            ScoreLabel(
-              mItems[2].getScore().toString(),
-              fontSize: 18.0,
-              height: 30.0,
-              width: 50.0,
-            ),
-            Text(
-              '${mItems[2].getWins()} ${S
-                  .of(context)
-                  .wins}\n${mItems[2].getLosses()} ${S
-                  .of(context)
-                  .looses}',
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  _buildAvatars(double tileSize) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: <Widget>[
-        CustomCircleAvatar(
-          _getPlayerAvatar(mItems[2].getPlayerId()),
-          radius: 20.0,
-          iconSize: 20.0,
-        ),
-        CustomCircleAvatar(
-          _getPlayerAvatar(mItems[0].getPlayerId()),
-          radius: 20.0,
-          iconSize: 20.0,
-        ),
-        CustomCircleAvatar(
-          _getPlayerAvatar(mItems[1].getPlayerId()),
-          radius: 20.0,
-          iconSize: 20.0,
-        ),
-      ],
     );
   }
 }
