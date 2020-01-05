@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shelem_shomar/ListView/top_players_listview.dart';
+import 'package:shelem_shomar/Widgets/empty_db_pages.dart';
 import 'package:shelem_shomar/Widgets/side_drawer.dart';
 import 'package:shelem_shomar/generated/i18n.dart';
 import 'package:shelem_shomar/helpers/dbhelper.dart';
@@ -78,16 +79,14 @@ class _TopPlayersState extends State<TopPlayers> {
             print(snapshot.error);
           }
 
-          var data = snapshot.data;
-
-          return snapshot.hasData
-              ? TopPlayersListView(data, _listGridTypeIndex)
-              : Center(
-                  child: Text(
-                    S.of(context).addPlayersAndPlayGamesFirst,
-                    style: TextStyle(fontSize: 16.0),
-                  ),
-                );
+          if (snapshot.hasData) {
+            if (snapshot.data.games.length > 0) {
+              return TopPlayersListView(snapshot.data, _listGridTypeIndex);
+            }
+          }
+          return EmptyDbPages(text: S
+              .of(context)
+              .addPlayersAndPlayGamesFirst);
         },
       ),
     );

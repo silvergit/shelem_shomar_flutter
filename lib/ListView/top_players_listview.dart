@@ -94,6 +94,7 @@ class _TopPlayersListViewState extends State<TopPlayersListView>
 
   @override
   void dispose() {
+    _animationController.dispose();
     super.dispose();
   }
 
@@ -125,13 +126,17 @@ class _TopPlayersListViewState extends State<TopPlayersListView>
           child: Row(
             children: <Widget>[
               Container(
+                  width: 30.0,
                   padding: EdgeInsets.all(4.0),
                   decoration: BoxDecoration(
-                      color: Theme
-                          .of(context)
-                          .accentColor,
-                      borderRadius: BorderRadius.circular(15.0)),
-                  child: Text((index + 4).toString())),
+                      border: Border.all(
+                        width: 2.0,
+                        color: Theme
+                            .of(context)
+                            .primaryColor,
+                      ),
+                      borderRadius: BorderRadius.circular(180.0)),
+                  child: Center(child: Text((index + 4).toString()))),
               Expanded(
                 child: Container(
                   padding: EdgeInsets.symmetric(horizontal: 4.0),
@@ -216,11 +221,28 @@ class _TopPlayersListViewState extends State<TopPlayersListView>
         return Card(
           child: Column(
             children: <Widget>[
-              ScoreLabel(
-                subItems[index].getScore().toString(),
-                margin: 0.0,
-                backColor: _getColor(index),
-                height: 48.0,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  Container(
+                      width: 30.0,
+                      padding: EdgeInsets.all(4.0),
+                      decoration: BoxDecoration(
+                          border: Border.all(
+                            width: 2.0,
+                            color: Theme
+                                .of(context)
+                                .primaryColor,
+                          ),
+                          borderRadius: BorderRadius.circular(180.0)),
+                      child: Center(child: Text((index + 4).toString()))),
+                  ScoreLabel(
+                    subItems[index].getScore().toString(),
+                    margin: 0.0,
+                    backColor: _getColor(index),
+                    height: 48.0,
+                  ),
+                ],
               ),
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
@@ -282,17 +304,13 @@ class _TopPlayersListViewState extends State<TopPlayersListView>
             return orientation == Orientation.portrait
                 ? Column(
               children: <Widget>[
-                Container(
-                  child: _buildTopCard(),
-                ),
+                _buildTopCard(),
                 Expanded(child: _buildBody()),
               ],
             )
                 : Row(
               children: <Widget>[
-                Container(
-                  child: _buildTopCard(),
-                ),
+                _buildTopCard(),
                 Expanded(child: _buildBody()),
               ],
             );

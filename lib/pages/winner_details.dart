@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:shelem_shomar/Widgets/custom_circle_avatar.dart';
 import 'package:shelem_shomar/Widgets/score_label.dart';
 import 'package:shelem_shomar/Widgets/side_drawer.dart';
@@ -32,6 +33,11 @@ class WinnerDetails extends StatefulWidget {
 
 class _WinnerDetailsState extends State<WinnerDetails>
     with SingleTickerProviderStateMixin {
+  @override
+  initState() {
+    return super.initState();
+  }
+
   String getMaxRead() {
     int maxRead = 0;
     for (PlayerReadRecords p in widget.playerReadRecords) {
@@ -178,7 +184,9 @@ class _WinnerDetailsState extends State<WinnerDetails>
                           ),
                           SingleChildScrollView(
                               scrollDirection: Axis.horizontal,
-                              child: Text(widget.playerReadRecords[2].name)),
+                              child: Text(
+                                widget.playerReadRecords[2].name,
+                              )),
                           SingleChildScrollView(
                               scrollDirection: Axis.horizontal,
                               child: Text(widget.playerReadRecords[3].name)),
@@ -203,77 +211,46 @@ class _WinnerDetailsState extends State<WinnerDetails>
                 child: Column(
                   children: <Widget>[
                     TextWithLocale(
-                        '${S
-                            .of(context)
-                            .handsPlayed}: ${widget.length}',
-                        languageCode),
+                      '${S
+                          .of(context)
+                          .handsPlayed}: ${widget.length}',
+                      languageCode,
+                      fontSize: 14.0,
+                    ),
                     TextWithLocale(
-                        '${S
-                            .of(context)
-                            .maxReadIs}: ${getMaxRead()}',
-                        languageCode),
-                    TextWithLocale(
-                        '${S
-                            .of(context)
-                            .gameFinishedIn}: ${widget.gameTime}',
-                        languageCode),
-                    TextWithLocale(
-                        '${S
-                            .of(context)
-                            .doublePositive}: ${widget.dPosCount}',
-                        languageCode),
-                    TextWithLocale(
-                        '${S
-                            .of(context)
-                            .doubleNegative}: ${widget.dNegCount}',
-                        languageCode),
+                      '${S
+                          .of(context)
+                          .maxReadIs}: ${getMaxRead()}',
+                      languageCode,
+                      fontSize: 14.0,
+                    ),
                   ],
                 ),
               ),
               Container(
-                margin: EdgeInsets.symmetric(
-                    vertical: 10.0, horizontal: 10.0),
-                padding: EdgeInsets.all(10.0),
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    Row(
-                      children: <Widget>[
-                        Icon(
-                          Icons.event_note,
-                          size: 36.0,
-                        ),
-                        Text(
-                          S
-                              .of(context)
-                              .scores,
-                          style: Theme
-                              .of(context)
-                              .textTheme
-                              .subtitle,
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 20.0,
+                    TextWithLocale(
+                      '${S
+                          .of(context)
+                          .gameFinishedIn}: ${widget.gameTime}',
+                      languageCode,
+                      fontSize: 14.0,
                     ),
                     TextWithLocale(
-                        widget.team1Points.toString(), languageCode,
-                        fontSize: Theme
-                            .of(context)
-                            .textTheme
-                            .subtitle
-                            .fontSize),
-                    SizedBox(
-                      height: 4.0,
+                      '${S
+                          .of(context)
+                          .doublePositive}: ${widget.dPosCount}',
+                      languageCode,
+                      fontSize: 14.0,
                     ),
                     TextWithLocale(
-                        widget.team2Points.toString(), languageCode,
-                        fontSize: Theme
-                            .of(context)
-                            .textTheme
-                            .subtitle
-                            .fontSize),
+                      '${S
+                          .of(context)
+                          .doubleNegative}: ${widget.dNegCount}',
+                      languageCode,
+                      fontSize: 14.0,
+                    ),
                   ],
                 ),
               ),
@@ -290,77 +267,40 @@ class _WinnerDetailsState extends State<WinnerDetails>
                     child: Column(
                       children: <Widget>[
                         TextWithLocale(
-                            '${S
-                                .of(context)
-                                .handsPlayed}: ${widget.length}',
-                            languageCode),
-                        TextWithLocale(
-                            '${S
-                                .of(context)
-                                .maxReadIs}: ${getMaxRead()}',
-                            languageCode),
-                        TextWithLocale(
-                            '${S
-                                .of(context)
-                                .gameFinishedIn}: ${widget.gameTime}',
-                            languageCode),
-                        TextWithLocale(
-                            '${S
-                                .of(context)
-                                .doublePositive}: ${widget.dPosCount}',
-                            languageCode),
-                        TextWithLocale(
-                            '${S
-                                .of(context)
-                                .doubleNegative}: ${widget.dNegCount}',
-                            languageCode),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.symmetric(
-                        vertical: 10.0, horizontal: 10.0),
-                    padding: EdgeInsets.all(10.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Row(
-                          children: <Widget>[
-                            Icon(
-                              Icons.event_note,
-                              size: 36.0,
-                            ),
-                            Text(
-                              S
-                                  .of(context)
-                                  .scores,
-                              style: Theme
-                                  .of(context)
-                                  .textTheme
-                                  .subtitle,
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 20.0,
+                          '${S
+                              .of(context)
+                              .handsPlayed}: ${widget.length}',
+                          languageCode,
+                          fontSize: 14.0,
                         ),
                         TextWithLocale(
-                            widget.team1Points.toString(), languageCode,
-                            fontSize: Theme
-                                .of(context)
-                                .textTheme
-                                .subtitle
-                                .fontSize),
-                        SizedBox(
-                          height: 4.0,
+                          '${S
+                              .of(context)
+                              .maxReadIs}: ${getMaxRead()}',
+                          languageCode,
+                          fontSize: 14.0,
                         ),
                         TextWithLocale(
-                            widget.team2Points.toString(), languageCode,
-                            fontSize: Theme
-                                .of(context)
-                                .textTheme
-                                .subtitle
-                                .fontSize),
+                          '${S
+                              .of(context)
+                              .gameFinishedIn}: ${widget.gameTime}',
+                          languageCode,
+                          fontSize: 14.0,
+                        ),
+                        TextWithLocale(
+                          '${S
+                              .of(context)
+                              .doublePositive}: ${widget.dPosCount}',
+                          languageCode,
+                          fontSize: 14.0,
+                        ),
+                        TextWithLocale(
+                          '${S
+                              .of(context)
+                              .doubleNegative}: ${widget.dNegCount}',
+                          languageCode,
+                          fontSize: 14.0,
+                        ),
                       ],
                     ),
                   ),
@@ -392,44 +332,44 @@ class _WinnerDetailsState extends State<WinnerDetails>
               width: 8.0,
             ),
             Expanded(
-                child: SingleChildScrollView(
-              child:
-                  Text(player.name, style: Theme.of(context).textTheme.body2),
-            )),
+              child: Column(
+                children: <Widget>[
+                  SingleChildScrollView(
+                    child: Text(player.name,
+                        style: Theme
+                            .of(context)
+                            .textTheme
+                            .body2),
+                  ),
+                  SingleChildScrollView(
+                    child: TextWithLocale(
+                        '${S
+                            .of(context)
+                            .topRead} : ${getStringRead(player.topRead)}',
+                        languageCode,
+                        fontSize: 12.0),
+                  )
+                ],
+              ),
+            ),
             SizedBox(
               width: 8.0,
             ),
             Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 ScoreLabel(getPlayerScore(player).toString()),
                 TextWithLocale(
                     '${S
                         .of(context)
                         .wins} : ${player.wins}', languageCode,
-                    fontSize: Theme
-                        .of(context)
-                        .textTheme
-                        .body1
-                        .fontSize),
+                    fontSize: 12.0),
                 TextWithLocale(
                     '${S
                         .of(context)
                         .looses} : ${player.looses}', languageCode,
-                    fontSize: Theme
-                        .of(context)
-                        .textTheme
-                        .body1
-                        .fontSize),
-                TextWithLocale(
-                    '${S
-                        .of(context)
-                        .topRead} : ${getStringRead(player.topRead)}',
-                    languageCode,
-                    fontSize: Theme
-                        .of(context)
-                        .textTheme
-                        .body1
-                        .fontSize),
+                    fontSize: 12.0),
               ],
             ),
           ],
@@ -460,17 +400,12 @@ class _WinnerDetailsState extends State<WinnerDetails>
         children: <Widget>[
           _buildTopCard(languageCode),
           Expanded(
-            child: ListView(
-              children: <Widget>[
-                _buildPlayerCards(
-                    widget.playerReadRecords[0], languageCode),
-                _buildPlayerCards(
-                    widget.playerReadRecords[1], languageCode),
-                _buildPlayerCards(
-                    widget.playerReadRecords[2], languageCode),
-                _buildPlayerCards(
-                    widget.playerReadRecords[3], languageCode),
-              ],
+            child: ListView.builder(
+              itemCount: widget.playerReadRecords.length,
+              itemBuilder: (context, index) {
+                return _buildPlayerCards(
+                    widget.playerReadRecords[index], languageCode);
+              },
             ),
           )
         ],
@@ -479,17 +414,12 @@ class _WinnerDetailsState extends State<WinnerDetails>
         children: <Widget>[
           _buildTopCard(languageCode),
           Expanded(
-            child: ListView(
-              children: <Widget>[
-                _buildPlayerCards(
-                    widget.playerReadRecords[0], languageCode),
-                _buildPlayerCards(
-                    widget.playerReadRecords[1], languageCode),
-                _buildPlayerCards(
-                    widget.playerReadRecords[2], languageCode),
-                _buildPlayerCards(
-                    widget.playerReadRecords[3], languageCode),
-              ],
+            child: ListView.builder(
+              itemCount: widget.playerReadRecords.length,
+              itemBuilder: (context, index) {
+                return _buildPlayerCards(
+                    widget.playerReadRecords[index], languageCode);
+              },
             ),
           ),
         ],

@@ -27,7 +27,7 @@ class _ManagePlayersListViewState extends State<ManagePlayersListView>
     super.initState();
 
     _animationController =
-        AnimationController(vsync: this, duration: Duration(seconds: 2));
+        AnimationController(vsync: this, duration: Duration(seconds: 1));
 
     _animation = Tween(begin: 1.0, end: 0.0).animate(
         CurvedAnimation(parent: _animationController, curve: Curves.bounceOut));

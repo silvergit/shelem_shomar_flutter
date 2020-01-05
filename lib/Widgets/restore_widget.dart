@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_extend/share_extend.dart';
+import 'package:shelem_shomar/Widgets/empty_db_pages.dart';
 import 'package:shelem_shomar/Widgets/text-with-locale-support.dart';
 import 'package:shelem_shomar/generated/i18n.dart';
 import 'package:shelem_shomar/helpers/filesize.dart';
@@ -106,37 +107,47 @@ class _RestoreWidgetState extends State<RestoreWidget> {
     ShareExtend.share(testFile.path, "file");
   }
 
-  _deleteBackupFile(BuildContext context, int index) async {
+  _deleteBackupFile(BuildContext pContext, int index) async {
     File dbFile = File(backupFiles[index]);
 
     if (await dbFile.exists()) {
       showDialog(
-        context: context,
+        context: pContext,
         builder: (BuildContext context) {
           return AlertDialog(
-            content: Text(S.of(context).doYouWantToDeleteBackupFile + '?'),
+            content: Text(S
+                .of(pContext)
+                .doYouWantToDeleteBackupFile + '?'),
             actions: <Widget>[
               FlatButton(
                   onPressed: () {
                     Navigator.of(context).pop();
                     dbFile.delete();
                     showSnackBar(
-                        context, S.of(context).databaseDeletedSuccessfully);
+                        pContext, S
+                        .of(pContext)
+                        .databaseDeletedSuccessfully);
 
                     setState(() {
                       backupFiles.removeAt(index);
                     });
                   },
-                  child: Text(S.of(context).ok)),
+                  child: Text(S
+                      .of(pContext)
+                      .ok)),
               FlatButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: Text(S.of(context).cancel)),
+                  onPressed: () => Navigator.of(pContext).pop(),
+                  child: Text(S
+                      .of(pContext)
+                      .cancel)),
             ],
           );
         },
       );
     } else {
-      showSnackBar(context, S.of(context).failedToDeleteDatabaseFile);
+      showSnackBar(pContext, S
+          .of(pContext)
+          .failedToDeleteDatabaseFile);
     }
   }
 
@@ -204,19 +215,15 @@ class _RestoreWidgetState extends State<RestoreWidget> {
   Widget _buildListView(BuildContext context, String languageCode) {
     return backupFiles.length == 0
         ? Expanded(
-            child: Center(
-              child: Center(
-                child: Text(
-                  S
-                      .of(context)
-                      .thereIsNoBackupFileHere,
-                  style: Theme
-                      .of(context)
-                      .textTheme
-                      .body2,
-                ),
-              ),
-            ))
+      child: EmptyDbPages(
+        text:
+        S
+            .of(context)
+            .thereIsNoBackupFileHere,
+
+
+      ),
+    )
         : Expanded(
       child: ListView.builder(
         itemCount: backupFiles.length,

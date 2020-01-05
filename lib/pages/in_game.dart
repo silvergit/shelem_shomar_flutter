@@ -63,9 +63,6 @@ class _InGamePage extends State<InGamePage>
   int _listTypeIndex;
   bool _getAfter = false;
 
-  AnimationController _animationController;
-  Animation _animation;
-
   @override
   void initState() {
     super.initState();
@@ -92,20 +89,11 @@ class _InGamePage extends State<InGamePage>
     _getAfter = widget.gameData['getPointsAfter'];
 
     _loadSharedPreferences();
-
-    _animationController =
-        AnimationController(vsync: this, duration: Duration(seconds: 1));
-
-    _animation = Tween(begin: -1.0, end: 0.0).animate(
-        CurvedAnimation(parent: _animationController, curve: Curves.bounceOut));
-
-    _animationController.forward();
   }
 
   @override
   void dispose() {
     _timer?.cancel();
-    _animationController.dispose();
     super.dispose();
   }
 

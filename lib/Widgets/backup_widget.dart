@@ -5,6 +5,7 @@ import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shelem_shomar/generated/i18n.dart';
+import 'package:shelem_shomar/helpers/dbhelper.dart';
 
 class BackupWidget extends StatefulWidget {
   @override
@@ -97,6 +98,8 @@ class _BackupWidgetState extends State<BackupWidget> {
     } else {
       showSnackBar(context, S.of(context).failedToDeleteDatabaseFile);
     }
+
+    DBHelper().setDB();
   }
 
   @override

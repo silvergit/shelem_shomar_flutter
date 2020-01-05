@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:shelem_shomar/Widgets/custom_circle_avatar.dart';
+import 'package:shelem_shomar/Widgets/empty_db_pages.dart';
 import 'package:shelem_shomar/Widgets/scale_anim_widget.dart';
 import 'package:shelem_shomar/Widgets/score_label.dart';
 import 'package:shelem_shomar/Widgets/text-with-locale-support.dart';
@@ -113,12 +114,9 @@ class _GamesListView extends State<GamesListListView>
   @override
   Widget build(BuildContext context) {
     if (widget.games.isEmpty) {
-      return Center(
-        child: Text(
-          S.of(context).thereIsNoGameHere,
-          style: TextStyle(fontSize: 26.0),
-        ),
-      );
+      return EmptyDbPages(text: S
+          .of(context)
+          .thereIsNoGameHere,);
     }
 
     String languageCode = Localizations

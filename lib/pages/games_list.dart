@@ -14,7 +14,6 @@ class GamesList extends StatefulWidget {
 class _GameListState extends State<GamesList> {
   var db = DBHelper();
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,9 +31,24 @@ class _GameListState extends State<GamesList> {
           return snapshot.hasData
               ? GamesListListView(data)
               : Center(
-                  child: Text(
-                    S.of(context).thereIsNoGameHere,
-                    style: TextStyle(fontSize: 26.0),
+            child: Container(
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(30.0),
+                  color: Theme
+                      .of(context)
+                      .primaryColor),
+              padding: EdgeInsets.all(48.0),
+              margin: EdgeInsets.all(48.0),
+              child: Text(
+                S
+                    .of(context)
+                    .thereIsNoGameHere,
+                style: TextStyle(
+                    fontSize: 22.0, color: Theme
+                    .of(context)
+                    .canvasColor),
+                textAlign: TextAlign.center,
+              ),
                   ),
                 );
         },
