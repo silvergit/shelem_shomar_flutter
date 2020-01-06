@@ -16,10 +16,32 @@ import 'helpers/custom_theme.dart';
 //Theme
 //
 
-void main() {
+void main() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  String theme = prefs.getString('theme');
+
+  MyThemeKeys key;
+
+  if (theme == null) key = MyThemeKeys.LIGHT;
+
+  switch (theme) {
+    case 'MyThemeKeys.GREEN':
+      key = MyThemeKeys.GREEN;
+      break;
+    case 'MyThemeKeys.BLUE':
+      key = MyThemeKeys.BLUE;
+      break;
+    case 'MyThemeKeys.GNOME':
+      key = MyThemeKeys.GNOME;
+      break;
+    case 'MyThemeKeys.LIGTH':
+      key = MyThemeKeys.LIGHT;
+      break;
+  }
+
   runApp(
     CustomTheme(
-      initialThemeKey: MyThemeKeys.LIGHT,
+      initialThemeKey: key,
       child: MyApp(),
     ),
   );
@@ -46,11 +68,12 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    this._fetchLocale().then((locale) {
-      setState(() {
-        this.locale = locale;
-      });
-    });
+
+//    this._fetchLocale().then((locale) {
+//      setState(() {
+//        this.locale = locale;
+//      });
+//    });
   }
 
   @override
@@ -101,10 +124,10 @@ class _MyAppState extends State<MyApp> {
     );
   }
 
-  _fetchLocale() async {
-    var prefs = await SharedPreferences.getInstance();
-
-    return Locale(
-        prefs.getString('language_code'), prefs.getString('country_code'));
-  }
+//  _fetchLocale() async {
+//    SharedPreferences prefs = await SharedPreferences.getInstance();
+//
+//    return Locale(
+//        prefs.getString('language_code'), prefs.getString('country_code'));
+//  }
 }

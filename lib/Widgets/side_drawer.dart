@@ -50,8 +50,10 @@ class _SideDrawerState extends State<SideDrawer> {
     return Localizations.localeOf(context).languageCode;
   }
 
-  void _changeTheme(BuildContext buildContext, MyThemeKeys key) {
+  Future _changeTheme(BuildContext buildContext, MyThemeKeys key) async {
     CustomTheme.instanceOf(buildContext).changeTheme(key);
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('theme', key.toString());
   }
 
   Widget _buildThemeTiles(Color color1, Color color2, MyThemeKeys key) {

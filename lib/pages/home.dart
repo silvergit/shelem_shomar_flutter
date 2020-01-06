@@ -28,18 +28,18 @@ class _HomePageState extends State<HomePage>
     _animationController =
         AnimationController(vsync: this, duration: Duration(seconds: 2));
 
-    _animation1 = Tween(begin: -1.0, end: 0.0).animate(CurvedAnimation(
+    _animation1 = Tween(begin: 1.0, end: 0.0).animate(CurvedAnimation(
         parent: _animationController, curve: Curves.fastOutSlowIn));
 
-    _animation2 = Tween(begin: -1.0, end: 0.0).animate(CurvedAnimation(
+    _animation2 = Tween(begin: 1.0, end: 0.0).animate(CurvedAnimation(
         parent: _animationController,
         curve: Interval(0.5, 1.0, curve: Curves.fastOutSlowIn)));
 
-    _animation3 = Tween(begin: -1.0, end: 0.0).animate(CurvedAnimation(
+    _animation3 = Tween(begin: 1.0, end: 0.0).animate(CurvedAnimation(
         parent: _animationController,
         curve: Interval(0.75, 1.0, curve: Curves.fastOutSlowIn)));
 
-    _animation4 = Tween(begin: -1.0, end: 0.0).animate(CurvedAnimation(
+    _animation4 = Tween(begin: 1.0, end: 0.0).animate(CurvedAnimation(
         parent: _animationController,
         curve: Interval(0.8, 1.0, curve: Curves.fastOutSlowIn)));
 
@@ -251,9 +251,6 @@ class _HomePageState extends State<HomePage>
       animation: _animationController,
       builder: (context, child) {
         return Scaffold(
-          backgroundColor: Theme
-              .of(context)
-              .primaryColor,
           appBar: AppBar(
             title: Text(S
                 .of(context)

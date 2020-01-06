@@ -3,7 +3,6 @@ import 'package:shelem_shomar/Widgets/side_drawer.dart';
 import 'package:shelem_shomar/generated/i18n.dart';
 
 class HelpPage extends StatelessWidget {
-
   final List<String> helpString = [
     'شلم',
     'شلم یا روکن یکی از بازی‌های پاسور است که بعد از حکم، محبوب‌ترین بازی ورق در میان ایرانیان محسوب می‌شود. '
@@ -200,12 +199,14 @@ class HelpPage extends StatelessWidget {
                 ),
               ),
             ),
-            Container(width: MediaQuery
-                .of(context)
-                .size
-                .width, color: Theme
-                .of(context)
-                .primaryColor,
+            Container(
+              width: MediaQuery
+                  .of(context)
+                  .size
+                  .width,
+              color: Theme
+                  .of(context)
+                  .primaryColor,
               child: Center(
                 child: Text(
                   'منبع : ویکی پدیا',
